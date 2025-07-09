@@ -1,0 +1,138 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Montserrat:wght@300;400;500&display=swap');
+
+.luxury-footer {
+  background-color: #000;
+  color: #fff;
+  padding: 4rem 2rem 2rem;
+  font-family: 'Montserrat', sans-serif;
+  border-top: 1px solid rgba(212, 175, 55, 0.2);
+}
+
+.luxury-footer-container {
+  max-width: 1300px;
+  margin: 0 auto;
+}
+
+.luxury-footer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 3rem;
+  margin-bottom: 2rem;
+}
+
+.luxury-footer-col h4,
+.luxury-footer-heading {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #D4AF37;
+  margin-bottom: 1.2rem;
+  font-family: 'Cormorant Garamond', serif;
+}
+
+.luxury-footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.luxury-footer-links li {
+  margin-bottom: 0.7rem;
+}
+
+.luxury-footer-links a {
+  color: #ccc;
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: color 0.3s ease;
+}
+
+.luxury-footer-links a:hover {
+  color: #D4AF37;
+}
+
+.luxury-footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.luxury-footer-logo {
+  font-size: 2rem;
+  color: #D4AF37;
+}
+
+.luxury-footer-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #D4AF37;
+  font-family: 'Cormorant Garamond', serif;
+}
+
+.luxury-footer-description {
+  font-size: 1rem;
+  color: #bbb;
+  line-height: 1.6;
+  max-width: 280px;
+}
+
+.luxury-footer-social {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.luxury-footer-social-icon {
+  color: #D4AF37;
+  background: rgba(212, 175, 55, 0.1);
+  padding: 0.5rem;
+  border-radius: 8px;
+  transition: background 0.3s ease, transform 0.2s ease;
+  width: 2rem;
+  height: 2rem;
+}
+
+.luxury-footer-social-icon:hover {
+  background: rgba(212, 175, 55, 0.25);
+  transform: scale(1.1);
+}
+
+.luxury-footer-social-icon:hover {
+  background: rgba(212, 175, 55, 0.2);
+}
+
+.luxury-footer-contact p {
+  font-size: 0.9rem;
+  color: #bbb;
+  margin-bottom: 0.3rem;
+}
+
+.luxury-footer-bottom {
+  border-top: 1px solid rgba(212, 175, 55, 0.1);
+  padding-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: #777;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .luxury-footer-grid {
+    gap: 2rem;
+  }
+
+  .luxury-footer-title {
+    font-size: 1.5rem;
+  }
+
+  .luxury-footer-description {
+    font-size: 0.95rem;
+  }
+
+  .luxury-footer-contact p {
+    font-size: 0.85rem;
+  }
+}

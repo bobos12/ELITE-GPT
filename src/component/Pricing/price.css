@@ -1,0 +1,596 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Montserrat:wght@200;300;400;500;600;700&display=swap');
+
+/* Main Container */
+.luxury-pricing-container {
+  min-height: 100vh;
+  background: linear-gradient(134deg, #000000 0%, #1a1a1a 30%, #0a0a0a 70%, #000000 100%);
+  position: relative;
+  padding: 5rem 2rem;
+  overflow: hidden;
+}
+
+/* Animated Background Elements */
+.luxury-pricing-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.gradient-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.4;
+  animation: float 12s ease-in-out infinite;
+}
+
+.orb-1 {
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, #D4AF37 0%, rgba(212, 175, 55, 0.2) 30%, rgba(212, 175, 55, 0.05) 60%, transparent 100%);
+  top: 10%;
+  right: 10%;
+  animation-delay: 0s;
+}
+
+.orb-2 {
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, #FFD700 0%, rgba(255, 215, 0, 0.15) 40%, rgba(255, 215, 0, 0.03) 70%, transparent 100%);
+  bottom: 20%;
+  left: 5%;
+  animation-delay: -4s;
+}
+
+.orb-3 {
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, #B8860B 0%, rgba(184, 134, 11, 0.1) 50%, transparent 100%);
+  top: 50%;
+  left: 50%;
+  animation-delay: -8s;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  25% { transform: translateY(-20px) rotate(90deg); }
+  50% { transform: translateY(0px) rotate(180deg); }
+  75% { transform: translateY(20px) rotate(270deg); }
+}
+
+/* Geometric Pattern */
+.geometric-pattern {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    linear-gradient(30deg, rgba(212, 175, 55, 0.02) 12%, transparent 12.5%, transparent 87%, rgba(212, 175, 55, 0.02) 87.5%),
+    linear-gradient(150deg, rgba(212, 175, 55, 0.02) 12%, transparent 12.5%, transparent 87%, rgba(212, 175, 55, 0.02) 87.5%);
+  background-size: 60px 60px;
+  opacity: 0.3;
+}
+
+/* Content Container */
+.luxury-pricing-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+}
+
+/* Header Section */
+.pricing-header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.luxury-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(212, 175, 55, 0.05) 100%);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  padding: 0.5rem 1.2rem;
+  border-radius: 50px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #D4AF37;
+  letter-spacing: 0.5px;
+  margin-bottom: 2rem;
+  box-shadow: 0 8px 32px rgba(212, 175, 55, 0.1);
+}
+
+.badge-icon {
+  font-size: 1.1rem;
+  filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.5));
+}
+
+.pricing-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 600;
+  font-size: 4rem;
+  line-height: 1.1;
+  margin-bottom: 1.5rem;
+  letter-spacing: 1px;
+}
+
+.title-line {
+  display: block;
+  margin-bottom: 0.2rem;
+}
+
+.elite-text {
+  color: #d4ab23;
+  font-weight: 700;
+  background: linear-gradient(45deg, #D4AF37, #FFD700, #D4AF37);
+  background-size: 200% 200%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+.main-text {
+  color: #ffffff;
+  font-weight: bolder;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+@keyframes shimmer {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.pricing-subtitle {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 300;
+  font-size: 1.2rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.85);
+  max-width: 600px;
+  margin: 0 auto;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Billing Toggle */
+.billing-toggle-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 4rem;
+}
+
+.billing-toggle {
+  position: relative;
+  background: linear-gradient(135deg, rgba(30, 30, 30, 0.8) 0%, rgba(40, 40, 40, 0.6) 100%);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 50px;
+  padding: 0.3rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.billing-option {
+  position: relative;
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.7);
+  padding: 1rem 2rem;
+  border-radius: 50px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.billing-option.active {
+  color: #000;
+  font-weight: 600;
+}
+
+.billing-option:hover:not(.active) {
+  color: #fff;
+}
+
+.savings-badge {
+  background: linear-gradient(135deg, #4ade80, #22c55e);
+  color: #000;
+  padding: 0.2rem 0.5rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.billing-slider {
+  position: absolute;
+  top: 0.3rem;
+  left: 0.3rem;
+  width: calc(50% - 0.4rem);
+  height: calc(100% - 0.6rem);
+  background: linear-gradient(135deg, #D4AF37 0%, #FFD700 50%, #D4AF37 100%);
+  border-radius: 50px;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 8px 32px rgba(212, 175, 55, 0.3);
+}
+
+.billing-slider.yearly {
+  left: calc(45% + 0rem);
+}
+
+/* Pricing Cards */
+.pricing-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto 4rem;
+}
+
+.pricing-card {
+  position: relative;
+  background: linear-gradient(145deg, rgba(25, 25, 25, 0.9) 0%, rgba(35, 35, 35, 0.8) 100%);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 24px;
+  padding: 2.5rem;
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  animation: fadeInUp 0.8s ease-out forwards;
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.pricing-card.popular {
+  border: 2px solid rgba(212, 175, 55, 0.5);
+  background: linear-gradient(145deg, rgba(35, 35, 35, 0.95) 0%, rgba(45, 45, 45, 0.9) 100%);
+  transform: scale(1.05);
+  box-shadow: 0 30px 80px rgba(212, 175, 55, 0.2);
+}
+
+.pricing-card:hover, .pricing-card.hovered {
+  transform: translateY(-10px);
+  border-color: rgba(212, 175, 55, 0.6);
+  box-shadow: 0 25px 60px rgba(212, 175, 55, 0.15);
+}
+
+.pricing-card.popular:hover, .pricing-card.popular.hovered {
+  transform: scale(1.05) translateY(-10px);
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card-glow {
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(45deg, rgba(212, 175, 55, 0.2), rgba(255, 215, 0, 0.1), rgba(212, 175, 55, 0.2));
+  border-radius: 24px;
+  filter: blur(10px);
+  animation: pulse 2s infinite;
+  z-index: -1;
+}
+
+.card-content {
+  position: relative;
+  z-index: 2;
+}
+
+.plan-badge {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, #D4AF37 0%, #FFD700 50%, #D4AF37 100%);
+  color: #000;
+  padding: 0.5rem 1.5rem;
+  border-radius: 20px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 8px 32px rgba(212, 175, 55, 0.4);
+}
+
+.card-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding-top: 1rem;
+}
+
+.plan-icon {
+  width: 70px;
+  height: 70px;
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.2) 0%, rgba(212, 175, 55, 0.1) 100%);
+  border: 2px solid rgba(212, 175, 55, 0.3);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  margin: 0 auto 1.5rem;
+  transition: all 0.4s ease;
+}
+
+.plan-icon.popular-icon {
+  background: linear-gradient(135deg, #9c8331 0%, #FFD700 50%, #D4AF37 100%);
+  border-color: rgba(212, 175, 55, 0.8);
+  box-shadow: 0 8px 32px rgba(212, 175, 55, 0.3);
+}
+
+.plan-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.5px;
+}
+
+.plan-description {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.5;
+  font-weight: 300;
+}
+
+/* Pricing Section */
+.pricing-section {
+  text-align: center;
+  margin-bottom: 2.5rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+}
+
+.price-container {
+  display: flex;
+  align-items: end;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.price {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1;
+}
+
+.period {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.original-price {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.crossed-price {
+  font-family: 'Montserrat', sans-serif;
+  color: rgba(255, 255, 255, 0.5);
+  text-decoration: line-through;
+  font-size: 0.9rem;
+}
+
+.savings {
+  background: linear-gradient(135deg, #4ade80, #22c55e);
+  color: #000;
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+/* Features List */
+.features-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 2.5rem 0;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.85);
+  margin-bottom: 1rem;
+  line-height: 1.5;
+  font-weight: 400;
+}
+
+.check-icon {
+  color: #4ade80;
+  font-weight: 700;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  background: rgba(74, 222, 128, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(74, 222, 128, 0.3);
+}
+
+/* CTA Button */
+.cta-button {
+  width: 100%;
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.9) 0%, rgba(255, 215, 0, 0.8) 50%, rgba(212, 175, 55, 0.9) 100%);
+  color: #000;
+  border: none;
+  padding: 1.2rem 2rem;
+  border-radius: 50px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(212, 175, 55, 0.2);
+}
+
+.cta-button.popular-button {
+  background: linear-gradient(135deg, #D4AF37 0%, #FFD700 50%, #D4AF37 100%);
+  box-shadow: 0 8px 32px rgba(212, 175, 55, 0.4);
+}
+
+.btn-shine {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  transition: all 0.6s ease;
+}
+
+.cta-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 45px rgba(212, 175, 55, 0.3);
+}
+
+.cta-button:hover .btn-shine {
+  left: 100%;
+}
+
+.cta-button:active {
+  transform: translateY(-1px);
+}
+
+/* Trust Section */
+.trust-section {
+  text-align: center;
+  margin-top: 4rem;
+}
+
+.trust-indicators {
+  display: flex;
+  justify-content: center;
+  gap: 3rem;
+  flex-wrap: wrap;
+}
+
+.trust-item {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.8);
+  letter-spacing: 0.5px;
+}
+
+.trust-icon-1 {
+  font-size: 1.2rem;
+  color: #51ff00;
+  filter: drop-shadow(0 0 8px rgba(136, 255, 0, 0.3));
+}
+
+.trust-icon-2 {
+  font-size: 1.2rem;
+  color: rgb(29, 29, 255);
+  filter: drop-shadow(0 0 8px rgba(0, 103, 199, 0.3));
+}
+
+.trust-icon-3 {
+  font-size: 1.2rem;
+  color: #fa0707;
+  filter: drop-shadow(0 0 8px rgba(255, 0, 0, 0.3));
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .pricing-cards {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  .pricing-card.popular {
+    transform: none;
+  }
+  
+  .pricing-card.popular:hover {
+    transform: translateY(-10px);
+  }
+}
+
+@media (max-width: 768px) {
+  .luxury-pricing-container {
+    padding: 3rem 1rem;
+  }
+  
+  .pricing-title {
+    font-size: 3rem;
+  }
+  
+  .pricing-cards {
+    grid-template-columns: 1fr;
+    max-width: 400px;
+  }
+  
+  .trust-indicators {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .billing-toggle {
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+  
+  .billing-slider {
+    width: calc(100% - 0.6rem);
+    height: calc(50% - 0.15rem);
+  }
+  
+  .billing-slider.yearly {
+    left: 0.3rem;
+    top: calc(50% + 0.15rem);
+  }
+}
+
+@media (max-width: 480px) {
+  .pricing-title {
+    font-size: 2.5rem;
+  }
+  
+  .pricing-card {
+    padding: 2rem 1.5rem;
+  }
+  
+  .price {
+    font-size: 2.8rem;
+  }
+}
