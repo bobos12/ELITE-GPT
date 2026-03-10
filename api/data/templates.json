@@ -1,0 +1,42 @@
+[
+  {
+    "id": "rental_agreement_basic",
+    "title": "Rental Agreement (Basic)",
+    "description": "A simple residential rental agreement template.",
+    "fields": [
+      { "key": "landlord_name", "label": "Landlord Name", "required": true, "placeholder": "e.g., Ahmed Ali" },
+      { "key": "tenant_name", "label": "Tenant Name", "required": true, "placeholder": "e.g., Sara Mohamed" },
+      { "key": "property_address", "label": "Property Address", "required": true, "placeholder": "Full address" },
+      { "key": "monthly_rent", "label": "Monthly Rent (EGP)", "required": true, "placeholder": "e.g., 5000" },
+      { "key": "start_date", "label": "Start Date", "required": true, "placeholder": "YYYY-MM-DD" },
+      { "key": "term_months", "label": "Term (months)", "required": true, "placeholder": "e.g., 12" }
+    ],
+    "body": "RENTAL AGREEMENT\n\nThis Rental Agreement is made between {{landlord_name}} (\"Landlord\") and {{tenant_name}} (\"Tenant\").\n\n1) Property: {{property_address}}\n2) Term: {{term_months}} months starting {{start_date}}\n3) Rent: {{monthly_rent}} EGP per month, payable in advance.\n\nGeneral terms: The Tenant shall use the property for residential purposes only and maintain it in good condition. This template is for general use and may need adjustments based on Egyptian law and the specific situation.\n"
+  },
+  {
+    "id": "nda_basic",
+    "title": "Non-Disclosure Agreement (NDA)",
+    "description": "A mutual NDA for confidential information sharing.",
+    "fields": [
+      { "key": "party_a", "label": "Party A Name", "required": true, "placeholder": "Company/Person A" },
+      { "key": "party_b", "label": "Party B Name", "required": true, "placeholder": "Company/Person B" },
+      { "key": "effective_date", "label": "Effective Date", "required": true, "placeholder": "YYYY-MM-DD" },
+      { "key": "term_years", "label": "Term (years)", "required": true, "placeholder": "e.g., 2" }
+    ],
+    "body": "NON-DISCLOSURE AGREEMENT (MUTUAL)\n\nThis NDA is entered into on {{effective_date}} between {{party_a}} and {{party_b}}.\n\n1) Confidential Information: Any non-public information disclosed by either party.\n2) Obligations: Each party agrees to protect confidential information and use it only for the permitted purpose.\n3) Term: {{term_years}} years from the effective date.\n\nThis is a general template. Consider tailoring to Egyptian legal requirements and consulting a lawyer for high-stakes agreements.\n"
+  },
+  {
+    "id": "employment_offer_basic",
+    "title": "Employment Offer Letter (Basic)",
+    "description": "A basic employment offer letter template.",
+    "fields": [
+      { "key": "employer_name", "label": "Employer Name", "required": true, "placeholder": "Company name" },
+      { "key": "employee_name", "label": "Employee Name", "required": true, "placeholder": "Employee full name" },
+      { "key": "job_title", "label": "Job Title", "required": true, "placeholder": "e.g., Legal Assistant" },
+      { "key": "salary", "label": "Monthly Salary (EGP)", "required": true, "placeholder": "e.g., 12000" },
+      { "key": "start_date", "label": "Start Date", "required": true, "placeholder": "YYYY-MM-DD" }
+    ],
+    "body": "EMPLOYMENT OFFER LETTER\n\nDear {{employee_name}},\n\n{{employer_name}} is pleased to offer you the position of {{job_title}} starting on {{start_date}}.\n\nCompensation: {{salary}} EGP per month (subject to applicable taxes/insurance).\n\nThis letter is a template and does not replace a full employment contract. Terms should comply with applicable Egyptian labor laws.\n"
+  }
+]
+

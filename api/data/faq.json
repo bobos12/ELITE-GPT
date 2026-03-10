@@ -1,0 +1,23 @@
+[
+  {
+    "id": "marriage_requirements",
+    "question": "What are common requirements for marriage registration in Egypt?",
+    "answer": "Requirements vary by circumstances (nationality, religion, prior marital status). Commonly requested items include valid IDs/passports, proof of marital status, and formal registration at the competent authority. For cross-national marriages, additional approvals/documents may apply."
+  },
+  {
+    "id": "company_registration",
+    "question": "How can I register a company in Egypt?",
+    "answer": "Company registration depends on the legal form (e.g., LLC) and requires drafting founding documents, choosing a name, determining capital, and completing registration steps with the relevant authorities. Specific requirements differ by activity and jurisdiction."
+  },
+  {
+    "id": "birth_certificate",
+    "question": "What documents are often needed for a birth certificate in Egypt?",
+    "answer": "Typically the hospital birth notification (or equivalent), parents’ IDs, and marriage documentation (when applicable). Requirements can differ based on location and special cases."
+  },
+  {
+    "id": "legal_disclaimer",
+    "question": "Is this legal advice?",
+    "answer": "No. This app provides general information and document templates. For decisions with legal consequences, consult a qualified lawyer in Egypt."
+  }
+]
+

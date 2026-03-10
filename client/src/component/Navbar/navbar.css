@@ -1,0 +1,488 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Montserrat:wght@200;300;400;500;600&display=swap');
+
+.luxury-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.85);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 32px rgba(0, 0, 0, 0.1);
+}
+
+.luxury-navbar.scrolled {
+  background: rgba(0, 0, 0, 0.95);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.luxury-navbar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 3rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Brand Section */
+.luxury-navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  text-decoration: none;
+}
+
+.luxury-navbar-brand:hover {
+  transform: translateY(-1px);
+}
+
+.luxury-navbar-logo-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+}
+
+.luxury-navbar-logo {
+  font-size: 2rem;
+  color: #D4AF37;
+  filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.3));
+  transition: all 0.3s ease;
+  z-index: 2;
+  position: relative;
+}
+
+.logo-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40px;
+  height: 40px;
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.2) 0%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(8px);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.luxury-navbar-brand:hover .logo-glow {
+  opacity: 1;
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.luxury-navbar-title {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 700;
+  font-family: 'Cormorant Garamond', serif;
+  letter-spacing: 1.5px;
+  background: linear-gradient(135deg, #D4AF37 0%, #FFD700 50%, #D4AF37 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 2px 8px rgba(212, 175, 55, 0.2);
+}
+
+.brand-tagline {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.6);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-top: -2px;
+}
+
+/* Navigation Links */
+.luxury-navbar-links {
+  display: flex;
+  align-items: center;
+  gap: 2.5rem;
+}
+
+.luxury-navbar-link {
+  position: relative;
+  color: rgba(255, 255, 255, 0.9);
+  text-decoration: none;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 400;
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
+  padding: 0.5rem 0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+.luxury-navbar-link span {
+  position: relative;
+  z-index: 2;
+  transition: color 0.3s ease;
+}
+
+.link-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 0;
+  height: 100%;
+  background: radial-gradient(ellipse, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
+  border-radius: 20px;
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.luxury-navbar-link:hover {
+  color: #D4AF37;
+  transform: translateY(-1px);
+}
+
+.luxury-navbar-link:hover .link-glow {
+  width: 120%;
+}
+
+.luxury-navbar-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #D4AF37, transparent);
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.luxury-navbar-link:hover::after {
+  width: 100%;
+}
+
+/* CTA Button */
+.luxury-navbar-cta {
+  position: relative;
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(212, 175, 55, 0.05) 100%);
+  color: #D4AF37;
+  border: 2px solid rgba(212, 175, 55, 0.3);
+  padding: 0.8rem 1.8rem;
+  border-radius: 50px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
+  font-size: 0.9rem;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  margin-left: 1rem;
+  overflow: hidden;
+  
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-shine {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transition: left 0.6s ease;
+}
+
+.btn-arrow {
+  transition: transform 0.3s ease;
+  opacity: 0.7;
+}
+
+.luxury-navbar-cta:hover {
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.2) 0%, rgba(212, 175, 55, 0.1) 100%);
+  border-color: #D4AF37;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(212, 175, 55, 0.2);
+  color: #FFD700;
+}
+
+.luxury-navbar-cta:hover .btn-shine {
+  left: 100%;
+}
+
+.luxury-navbar-cta:hover .btn-arrow {
+  transform: translate(2px, -2px);
+  opacity: 1;
+}
+
+/* Mobile Menu Button */
+.luxury-navbar-menu {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  flex-direction: column;
+  gap: 4px;
+  z-index: 1002;
+  padding: 8px;
+  border-radius: 6px;
+  transition: background 0.3s ease;
+}
+
+.luxury-navbar-menu:hover {
+  background: rgba(212, 175, 55, 0.1);
+}
+
+.luxury-navbar-menu-line {
+  width: 24px;
+  height: 2px;
+  background: #D4AF37;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 2px;
+  box-shadow: 0 0 6px rgba(212, 175, 55, 0.3);
+}
+
+.luxury-navbar-menu.active .luxury-navbar-menu-line:nth-child(1) {
+  transform: translateY(6px) rotate(45deg);
+}
+
+.luxury-navbar-menu.active .luxury-navbar-menu-line:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0);
+}
+
+.luxury-navbar-menu.active .luxury-navbar-menu-line:nth-child(3) {
+  transform: translateY(-6px) rotate(-45deg);
+}
+
+/* Mobile Overlay */
+.mobile-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.8);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  z-index: 999;
+}
+
+.mobile-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .luxury-navbar-container {
+    padding: 1.5rem 2rem;
+  }
+
+  .luxury-navbar-links {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 350px;
+    height: 100vh;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.95) 0%, rgba(20, 20, 20, 0.95) 100%);
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 8rem 2.5rem 2rem;
+    gap: 2rem;
+    transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border-left: 1px solid rgba(212, 175, 55, 0.2);
+    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.3);
+    z-index: 1001;
+  }
+
+  .luxury-navbar-links.active {
+    right: 0;
+  }
+
+  .luxury-navbar-link {
+    font-size: 1.1rem;
+    padding: 0.8rem 0;
+    width: 100%;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+  }
+
+  .luxury-navbar-cta {
+    margin-left: 0;
+    margin-top: 1rem;
+    width: 100%;
+    justify-content: center;
+    padding: 1rem 2rem;
+  }
+
+  .luxury-navbar-menu {
+    display: flex;
+  }
+
+  .brand-tagline {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .luxury-navbar-container {
+    padding: 1.2rem 1.5rem;
+  }
+
+  .luxury-navbar-title {
+    font-size: 1.6rem;
+  }
+
+  .luxury-navbar-logo {
+    font-size: 1.8rem;
+  }
+
+  .luxury-navbar-links {
+    width: 300px;
+    padding: 7rem 2rem 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .luxury-navbar-container {
+    padding: 1rem;
+  }
+
+  .luxury-navbar-title {
+    font-size: 1.4rem;
+  }
+
+  .luxury-navbar-logo {
+    font-size: 1.6rem;
+  }
+
+  .luxury-navbar-links {
+    width: 280px;
+    padding: 6rem 1.5rem 2rem;
+  }
+
+  .luxury-navbar-logo-container {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Additional premium touches */
+.luxury-navbar-brand:hover .luxury-navbar-logo {
+  transform: scale(1.05);
+  filter: drop-shadow(0 0 12px rgba(212, 175, 55, 0.5));
+}
+
+.luxury-navbar-link:active {
+  transform: translateY(0);
+}
+
+.luxury-navbar-cta:active {
+  transform: translateY(-1px);
+}
+
+/* Profile menu */
+.profile {
+  position: relative;
+}
+
+.profile-button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.profile-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  background: radial-gradient(circle at 30% 30%, rgba(212, 175, 55, 0.28), rgba(255, 255, 255, 0.04));
+  box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.06);
+}
+
+.profile-button:hover .profile-avatar {
+  border-color: rgba(212, 175, 55, 0.65);
+  transform: translateY(-1px);
+}
+
+.profile-backdrop {
+  position: fixed;
+  inset: 0;
+  background: transparent;
+  border: none;
+  z-index: 998;
+}
+
+.profile-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 12px);
+  width: min(320px, 86vw);
+  border: 1px solid rgba(212, 175, 55, 0.22);
+  background: rgba(0, 0, 0, 0.92);
+  backdrop-filter: blur(12px);
+  border-radius: 14px;
+  padding: 10px;
+  z-index: 999;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.45);
+}
+
+.profile-email {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.7);
+  padding: 8px 10px 10px;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.12);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.profile-item {
+  width: 100%;
+  margin-top: 8px;
+  height: 40px;
+  border-radius: 12px;
+  border: 1px solid rgba(212, 175, 55, 0.18);
+  background: rgba(255, 255, 255, 0.03);
+  color: rgba(255, 255, 255, 0.9);
+  cursor: pointer;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
+}
+
+.profile-item:hover {
+  border-color: rgba(212, 175, 55, 0.35);
+}
+
+.profile-item.danger {
+  border-color: rgba(239, 68, 68, 0.45);
+  background: rgba(239, 68, 68, 0.08);
+}
+
+.profile-item.danger:hover {
+  border-color: rgba(239, 68, 68, 0.7);
+}

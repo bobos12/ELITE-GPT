@@ -1,0 +1,14 @@
+.kb-shell { max-width: 980px; margin: 0 auto; padding: 2.2rem 1rem 3rem; color: #fff; }
+.kb-header { margin-bottom: 1.2rem; }
+.kb-title { font-size: 1.8rem; font-weight: 800; letter-spacing: .4px; }
+.kb-subtitle { color: rgba(255,255,255,0.65); margin-top: .25rem; }
+.kb-search { margin: 1rem 0 1.2rem; }
+.kb-input { width: 100%; padding: .85rem 1rem; border-radius: 14px; border: 1px solid rgba(255,215,0,0.25); background: rgba(255,255,255,0.04); color: #fff; outline: none; }
+.kb-input:focus { border-color: rgba(255,215,0,0.55); box-shadow: 0 0 0 4px rgba(255,215,0,0.12); }
+.kb-panel { border: 1px solid rgba(255,215,0,0.18); background: rgba(0,0,0,0.25); border-radius: 16px; padding: 1rem; }
+.kb-panel.error { border-color: rgba(255,80,80,0.35); background: rgba(255,80,80,0.08); }
+.kb-list { display: grid; gap: .8rem; }
+.kb-item { border: 1px solid rgba(255,215,0,0.18); background: rgba(0,0,0,0.25); border-radius: 16px; padding: .85rem 1rem; }
+.kb-q { cursor: pointer; font-weight: 700; }
+.kb-a { margin-top: .6rem; color: rgba(255,255,255,0.8); line-height: 1.6; white-space: pre-wrap; }
+

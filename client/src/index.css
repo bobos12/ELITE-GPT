@@ -1,0 +1,21 @@
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #ffd700 0%, #0a0a0a 100%);
+}
+
+.app-content {
+  padding-top: 96px;
+}
+
+@media (max-width: 768px) {
+  .app-content {
+    padding-top: 82px;
+  }
+}
+
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
