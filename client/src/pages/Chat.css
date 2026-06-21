@@ -1373,27 +1373,110 @@
 /* ═══════════════════════════════════════════════════════════════════════════
    RESPONSIVE
    ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Sidebar: cap width on narrow phones ─────────────────────────────────── */
+@media (max-width: 1023px) {
+  .ec-sidebar { max-width: 82vw; }
+}
+
+/* ── ≤ 768px: tablet / large phone ──────────────────────────────────────── */
 @media (max-width: 768px) {
   .ec-welcome-cards { grid-template-columns: repeat(2, 1fr); }
-  .ec-topbar-title { max-width: 160px; }
-  .ec-status-badge { display: none; }
-  .ec-messages { padding: 20px 16px 16px; }
-  .ec-input-area { padding: 10px 14px 16px; }
+  .ec-topbar-title  { max-width: 160px; }
+  .ec-status-badge  { display: none; }
+  .ec-messages      { padding: 20px 14px 16px; }
+  .ec-input-area    { padding: 8px 12px 14px; }
   .ec-msg-user-bubble { max-width: 88%; }
+
+  /* Keep settings panel fully inside the viewport */
+  .ec-settings-panel { right: 8px; left: 8px; width: auto; top: 58px; }
 }
 
+/* ── ≤ 640px: most phones (landscape & portrait) ─────────────────────────── */
+@media (max-width: 640px) {
+  /* Action buttons: collapse to icon-only to prevent overflow */
+  .ec-msg-action {
+    font-size: 0;       /* hides text nodes, SVG unaffected */
+    letter-spacing: 0;
+    padding: 6px 8px;
+    gap: 0;
+    border-radius: 8px;
+  }
+  .ec-msg-action svg { flex-shrink: 0; }
+
+  /* Hide Enter/Shift+Enter hint — not relevant on touch keyboards */
+  .ec-input-hint { display: none; }
+
+  /* Confidence reason is too verbose on small screens */
+  .ec-confidence-reason { display: none; }
+}
+
+/* ── ≤ 480px: small phone (portrait primary target) ─────────────────────── */
 @media (max-width: 480px) {
-  .ec-welcome { padding: 32px 12px 16px; }
-  .ec-welcome-cards { grid-template-columns: 1fr 1fr; gap: 8px; }
-  .ec-welcome-title { font-size: 1.35rem; }
-  .ec-topbar { padding: 0 12px; height: 50px; }
-  .ec-topbar-title-group { display: none; }
-  .ec-messages { padding: 16px 12px 12px; gap: 18px; }
-  .ec-msg-ai { padding: 14px 14px; }
+  /* Welcome */
+  .ec-welcome           { padding: 24px 10px 12px; overflow: hidden; }
+  .ec-welcome-glow      { width: 100%; }   /* prevent horizontal bleed */
+  .ec-welcome-cards     { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .ec-welcome-card      { padding: 12px; }
+  .ec-welcome-card-icon { width: 32px; height: 32px; border-radius: 8px; margin-bottom: 2px; }
+  .ec-welcome-card-label{ font-size: 0.76rem; }
+  .ec-welcome-card-desc { font-size: 0.67rem; }
+  .ec-welcome-title     { font-size: 1.28rem; }
+  .ec-welcome-sub       { font-size: 0.83rem; margin-bottom: 20px; }
+
+  /* Topbar */
+  .ec-topbar            { padding: 0 10px; height: 50px; gap: 4px; }
+  .ec-topbar-left,
+  .ec-topbar-right      { gap: 2px; }
+  .ec-topbar-title-group{ display: none; }
+  .ec-icon-btn          { width: 32px; height: 32px; }
+
+  /* Messages container */
+  .ec-messages          { padding: 12px 10px 10px; gap: 14px; }
+
+  /* User bubble */
+  .ec-msg-user-bubble   { max-width: 92%; font-size: 0.88rem; padding: 10px 13px; }
+
+  /* AI card */
+  .ec-msg-ai            { padding: 12px 12px; }
+  .ec-msg-ai-header     { gap: 8px; margin-bottom: 10px; }
+  .ec-msg-ai-name       { font-size: 0.74rem; }
+  .ec-msg-ai-model      { font-size: 0.6rem; }
+  .ec-msg-timestamp     { font-size: 0.62rem; }
+
+  /* Action buttons row */
+  .ec-msg-actions       { gap: 3px; margin-top: 8px; }
+  .ec-msg-actions-group { gap: 2px; flex-wrap: wrap; }
+
+  /* Citation card header: stack info on two lines */
+  .ec-cite-header       { flex-wrap: wrap; gap: 4px; }
+  .ec-cite-ref          { flex: 1 1 100%; }
+  .ec-cite-meta         { padding-right: 4px; gap: 4px; }
+  .ec-cite-year         { display: none; }   /* too much text on small screen */
+
+  /* Confidence badge */
+  .ec-confidence        { font-size: 0.72rem; padding: 6px 10px; }
+
+  /* Input area */
+  .ec-input-area        { padding: 6px 10px 10px; }
+  .ec-textarea          { font-size: 0.9rem; padding: 12px 14px 6px; }
+  .ec-input-toolbar     { padding: 4px 8px 8px; }
+  .ec-char-count        { font-size: 0.62rem; }
+
+  /* Settings panel */
+  .ec-settings-panel    { right: 6px; left: 6px; width: auto; top: 54px; }
+
+  /* Profile menu: extend rightward from avatar (stays in viewport) */
+  .ec-profile-menu      { left: 0; right: auto; min-width: 200px; }
 }
 
+/* ── ≤ 380px: very compact phones ───────────────────────────────────────── */
 @media (max-width: 380px) {
-  .ec-welcome-cards { grid-template-columns: 1fr; }
+  .ec-welcome-cards  { grid-template-columns: 1fr; }
+  .ec-topbar-right   { gap: 1px; }
+  .ec-messages       { padding: 10px 8px 8px; }
+  .ec-msg-ai         { padding: 10px 10px; }
+  .ec-input-area     { padding: 6px 8px 10px; }
 }
 
 /* ── Reduced motion ───────────────────────────────────────────────────────── */
