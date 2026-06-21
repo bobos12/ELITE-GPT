@@ -5,8 +5,7 @@ import {
   Settings, FileText, X, MessageSquare, Bookmark, LayoutDashboard,
   Globe, AlignLeft, Paperclip, AlertCircle, Building2, HardHat,
   Landmark, Home, Shield, ThumbsUp, ThumbsDown, Bot,
-  LogOut, BookOpen, ChevronDown, BookMarked, CheckCircle2,
-  MinusCircle, XCircle, ChevronUp,
+  LogOut, BookOpen,
 } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -19,42 +18,12 @@ import './Chat.css';
 
 // ─── constants ───────────────────────────────────────────────────────────────
 const WELCOME_CARDS = [
-  {
-    label: 'الأحوال الشخصية',
-    desc: 'الزواج والطلاق وقانون الأسرة المصري',
-    Icon: Scale,
-    query: 'ما هي إجراءات الطلاق والخلع وأحكام الحضانة في القانون المصري؟',
-  },
-  {
-    label: 'تأسيس الشركات',
-    desc: 'تسجيل الشركات والمؤسسات في مصر',
-    Icon: Building2,
-    query: 'ما هي شروط تأسيس شركة ذات مسؤولية محدودة في مصر ورأس المال المطلوب؟',
-  },
-  {
-    label: 'قانون العمل',
-    desc: 'حقوق الموظف وفق قانون العمل رقم 12/2003',
-    Icon: HardHat,
-    query: 'ما هي حقوق العامل في الإجازة السنوية ومكافأة نهاية الخدمة وفق قانون العمل المصري رقم 12 لسنة 2003؟',
-  },
-  {
-    label: 'رفع الدعاوى',
-    desc: 'إجراءات التقاضي والمحاكم الابتدائية',
-    Icon: Landmark,
-    query: 'كيف يُقدَّم البلاغ الجنائي وما هي إجراءات رفع الدعوى أمام النيابة العامة في مصر؟',
-  },
-  {
-    label: 'الملكية والعقارات',
-    desc: 'توثيق العقود وسندات الملكية العقارية',
-    Icon: Home,
-    query: 'ما هي إجراءات نقل ملكية العقار وتسجيله في الشهر العقاري وفق القانون المصري؟',
-  },
-  {
-    label: 'الجرائم والعقوبات',
-    desc: 'التشريعات الجنائية وقانون العقوبات',
-    Icon: Shield,
-    query: 'ما هي عقوبة النصب والاحتيال وجرائم الاستيلاء على المال في قانون العقوبات المصري؟',
-  },
+  { label: 'الأحوال الشخصية', desc: 'الزواج والطلاق وقانون الأسرة المصري', Icon: Scale },
+  { label: 'تأسيس الشركات', desc: 'تسجيل الشركات والمؤسسات في مصر', Icon: Building2 },
+  { label: 'قانون العمل', desc: 'حقوق الموظف وفق قانون العمل رقم 12/2003', Icon: HardHat },
+  { label: 'رفع الدعاوى', desc: 'إجراءات التقاضي والمحاكم الابتدائية', Icon: Landmark },
+  { label: 'الملكية والعقارات', desc: 'توثيق العقود وسندات الملكية العقارية', Icon: Home },
+  { label: 'الجرائم والعقوبات', desc: 'التشريعات الجنائية وقانون العقوبات', Icon: Shield },
 ];
 
 const GROUP_LABELS = {
@@ -360,16 +329,7 @@ export default function EliteChat() {
       const returnedId = data?.chatId;
       if (returnedId && returnedId !== activeChatId) setActiveChatId(returnedId);
 
-      const assistantMsg = {
-        id: Date.now() + 1,
-        type: 'assistant',
-        content,
-        timestamp: new Date(),
-        citations: data?.citations || [],
-        confidence: data?.confidence || 'medium',
-        confidenceReason: data?.confidenceReason || '',
-        isOutOfScope: data?.isOutOfScope || false,
-      };
+      const assistantMsg = { id: Date.now() + 1, type: 'assistant', content, timestamp: new Date() };
       setMessages(prev => [...prev, assistantMsg]);
       setIsLoading(false);
       startStreaming(content, assistantMsg.id);
@@ -435,16 +395,7 @@ export default function EliteChat() {
       });
       const data = await res.json().catch(() => ({}));
       const content = data?.reply || 'لا توجد إجابة.';
-      const assistantMsg = {
-        id: Date.now() + 1,
-        type: 'assistant',
-        content,
-        timestamp: new Date(),
-        citations: data?.citations || [],
-        confidence: data?.confidence || 'medium',
-        confidenceReason: data?.confidenceReason || '',
-        isOutOfScope: data?.isOutOfScope || false,
-      };
+      const assistantMsg = { id: Date.now() + 1, type: 'assistant', content, timestamp: new Date() };
       setMessages(prev => [...prev, assistantMsg]);
       setIsLoading(false);
       startStreaming(content, assistantMsg.id);
@@ -460,18 +411,16 @@ export default function EliteChat() {
     sendAction(userMsg.content, 'إعادة توليد الإجابة');
   }, [messages, sendAction]);
 
-  const explainSimply = useCallback((content, originalQuestion) => {
-    const topic = originalQuestion ? `الموضوع القانوني: ${originalQuestion}\n\n` : '';
+  const explainSimply = useCallback((content) => {
     sendAction(
-      `${topic}اشرح الإجابة القانونية التالية بأسلوب بسيط يفهمه شخص عادي وبدون مصطلحات قانونية معقدة، مع الإبقاء على الدقة القانونية:\n\n${content}`,
+      `اشرح لي الإجابة التالية بأسلوب بسيط جداً يفهمه شخص عادي وبدون مصطلحات قانونية معقدة:\n\n${content}`,
       'اشرح بأسلوب أبسط'
     );
   }, [sendAction]);
 
-  const continueResponse = useCallback((content, originalQuestion) => {
-    const topic = originalQuestion ? `الموضوع القانوني: ${originalQuestion}\n\n` : '';
+  const continueResponse = useCallback((content) => {
     sendAction(
-      `${topic}أكمل الإجابة القانونية التالية بإضافة تفاصيل قانونية إضافية من القانون المصري مع الاستشهاد بالمواد ذات الصلة. لا تُعِد كتابة ما سبق ذكره، بل أضف فقط ما لم يُذكَر:\n\n${content}`,
+      `أكمل هذه الإجابة وأضف المزيد من التفاصيل والمعلومات المفيدة:\n\n${content}`,
       'أكمل الإجابة'
     );
   }, [sendAction]);
@@ -529,26 +478,6 @@ export default function EliteChat() {
   const handleKeyDown = useCallback((e) => {
     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSubmit(e); }
   }, [handleSubmit]);
-
-  // ── citation panel state ──────────────────────────────────────────────────
-  const [expandedCitations, setExpandedCitations] = useState(new Set());
-  const [openArticles, setOpenArticles] = useState(new Set());
-
-  const toggleCitations = useCallback((msgId) => {
-    setExpandedCitations(prev => {
-      const n = new Set(prev);
-      n.has(msgId) ? n.delete(msgId) : n.add(msgId);
-      return n;
-    });
-  }, []);
-
-  const toggleArticle = useCallback((key) => {
-    setOpenArticles(prev => {
-      const n = new Set(prev);
-      n.has(key) ? n.delete(key) : n.add(key);
-      return n;
-    });
-  }, []);
 
   // ── computed ──────────────────────────────────────────────────────────────
   const showWelcome = messages.length === 0;
@@ -734,7 +663,7 @@ export default function EliteChat() {
               <div className="ec-topbar-title">{activeTitle || 'ELITE Legal AI'}</div>
               <div className="ec-topbar-model">
                 <Bot size={11} />
-                <span>مساعد قانوني ذكي</span>
+                <span>Llama 3.3 70B</span>
               </div>
             </div>
           </div>
@@ -821,7 +750,7 @@ export default function EliteChat() {
         </AnimatePresence>
 
         {/* ── MESSAGES AREA ─────────────────────────────────────────────── */}
-        <div className={`ec-messages-wrap${showWelcome ? ' ec-messages-wrap--welcome' : ''}`}>
+        <div className="ec-messages-wrap">
           <div className="ec-messages">
 
             {/* Welcome screen */}
@@ -841,7 +770,7 @@ export default function EliteChat() {
                       key={i}
                       className="ec-welcome-card"
                       type="button"
-                      onClick={() => { setInput(card.query); inputRef.current?.focus(); }}
+                      onClick={() => { setInput(`أخبرني عن ${card.label}`); inputRef.current?.focus(); }}
                       initial={{ opacity: 0, y: 12 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.3, delay: i * 0.05 }}
@@ -892,7 +821,7 @@ export default function EliteChat() {
                       </div>
                       <div className="ec-msg-ai-identity">
                         <span className="ec-msg-ai-name">ELITE Legal AI</span>
-                        <span className="ec-msg-ai-model">مساعد قانوني ذكي</span>
+                        <span className="ec-msg-ai-model">Llama 3.3 70B</span>
                       </div>
                       <span className="ec-msg-timestamp">{formatTime(msg.timestamp)}</span>
                       {isStreaming && (
@@ -908,85 +837,13 @@ export default function EliteChat() {
                       {isStreaming && <span className="ec-cursor" aria-hidden="true" />}
                     </div>
 
-                    {/* Confidence badge + out-of-scope warning */}
+                    {/* Disclaimer */}
                     {!isStreaming && (
-                      <>
-                        {msg.isOutOfScope && (
-                          <div className="ec-out-of-scope">
-                            <XCircle size={13} />
-                            <span>هذا السؤال خارج نطاق القانون المصري — يُنصح بمراجعة مختص في المجال المناسب.</span>
-                          </div>
-                        )}
-
-                        {msg.confidence && (
-                          <div className={`ec-confidence ec-confidence--${msg.confidence}`}>
-                            {msg.confidence === 'high' && <CheckCircle2 size={13} />}
-                            {msg.confidence === 'medium' && <MinusCircle size={13} />}
-                            {msg.confidence === 'low' && <AlertCircle size={13} />}
-                            <span className="ec-confidence-label">
-                              {msg.confidence === 'high' && 'ثقة عالية'}
-                              {msg.confidence === 'medium' && 'ثقة متوسطة'}
-                              {msg.confidence === 'low' && 'ثقة منخفضة'}
-                            </span>
-                            {msg.confidenceReason && (
-                              <span className="ec-confidence-reason">— {msg.confidenceReason}</span>
-                            )}
-                          </div>
-                        )}
-
-                        {Array.isArray(msg.citations) && msg.citations.length > 0 && (
-                          <div className="ec-citations">
-                            <button
-                              className="ec-citations-toggle"
-                              type="button"
-                              onClick={() => toggleCitations(msg.id)}
-                              aria-expanded={expandedCitations.has(msg.id)}
-                            >
-                              <BookMarked size={13} />
-                              <span>المواد القانونية المستشهد بها ({msg.citations.length})</span>
-                              {expandedCitations.has(msg.id) ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
-                            </button>
-
-                            {expandedCitations.has(msg.id) && (
-                              <div className="ec-citations-list">
-                                {msg.citations.map((cite, ci) => {
-                                  const key = `${msg.id}_${cite.id}`;
-                                  const isOpen = openArticles.has(key);
-                                  return (
-                                    <div key={cite.id} className="ec-cite-card">
-                                      <button
-                                        className="ec-cite-header"
-                                        type="button"
-                                        onClick={() => toggleArticle(key)}
-                                      >
-                                        <div className="ec-cite-ref">
-                                          <span className="ec-cite-num">[{ci + 1}]</span>
-                                          <span className="ec-cite-law">{cite.law_name}</span>
-                                        </div>
-                                        <div className="ec-cite-meta">
-                                          <span className="ec-cite-article">المادة {cite.article_number}</span>
-                                          <span className="ec-cite-year">رقم {cite.law_number} / {cite.year}</span>
-                                          {isOpen ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
-                                        </div>
-                                      </button>
-                                      {isOpen && (
-                                        <div className="ec-cite-body" dir="rtl">
-                                          {cite.chapter && (
-                                            <p className="ec-cite-chapter">{cite.chapter}</p>
-                                          )}
-                                          <p className="ec-cite-text">{cite.article_text}</p>
-                                        </div>
-                                      )}
-                                    </div>
-                                  );
-                                })}
-                              </div>
-                            )}
-                          </div>
-                        )}
-                      </>
+                      <div className="ec-disclaimer">
+                        <AlertCircle size={11} />
+                        <span>هذه معلومات قانونية عامة وليست استشارة قانونية متخصصة — يُنصح باستشارة محامٍ مرخص.</span>
+                      </div>
                     )}
-
 
                     {/* Actions */}
                     {!isStreaming && (
@@ -1009,16 +866,10 @@ export default function EliteChat() {
                           <button className="ec-msg-action" type="button" onClick={() => regenerate(idx)}>
                             <RefreshCw size={12} /> إعادة
                           </button>
-                          <button className="ec-msg-action" type="button" onClick={() => {
-                              const q = messages.slice(0, idx).reverse().find(m => m.type === 'user')?.content;
-                              explainSimply(msg.content, q);
-                            }}>
+                          <button className="ec-msg-action" type="button" onClick={() => explainSimply(msg.content)}>
                             <Lightbulb size={12} /> تبسيط
                           </button>
-                          <button className="ec-msg-action" type="button" onClick={() => {
-                              const q = messages.slice(0, idx).reverse().find(m => m.type === 'user')?.content;
-                              continueResponse(msg.content, q);
-                            }}>
+                          <button className="ec-msg-action" type="button" onClick={() => continueResponse(msg.content)}>
                             <ChevronRight size={12} /> أكمل
                           </button>
                           <button className={`ec-msg-action ${isFavorite(msg.id) ? 'active' : ''}`}
