@@ -24,11 +24,16 @@
       "dest": "api/server.js"
     },
     {
-      "handle": "filesystem"
+      "src": "/static/(.*)",
+      "dest": "client/static/$1"
+    },
+    {
+      "src": "/(.*\\.(js|css|png|jpg|ico|json|txt|svg|webp|woff|woff2|ttf|eot|map))",
+      "dest": "client/$1"
     },
     {
       "src": "/(.*)",
-      "dest": "/index.html"
+      "dest": "client/index.html"
     }
   ]
 }
