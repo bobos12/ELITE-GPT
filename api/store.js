@@ -158,6 +158,18 @@ exports.removeUserFavorite = (userId, favId) => {
   return true;
 };
 
+// ── Seed user from env vars (survives every cold start) ──────────────────────
+// Set SEED_EMAIL + SEED_PASSWORD_HASH in Vercel env vars to guarantee a login
+// always works, even after the in-memory store resets.
+;(function seedFromEnv() {
+  const email = (process.env.SEED_EMAIL || '').trim().toLowerCase();
+  const hash  = (process.env.SEED_PASSWORD_HASH || '').trim();
+  if (!email || !hash) return;
+  if (exports.findUserByEmail(email)) return;
+  const id = 'seed-1';
+  users.set(id, { id, email, passwordHash: hash, chats: [], documents: [], favorites: [] });
+})();
+
 // ── History (derived from chats) ──────────────────────────────────────────────
 
 exports.getUserHistory = (userId, limit = 100) => {
