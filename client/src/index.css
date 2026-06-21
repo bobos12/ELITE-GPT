@@ -109,7 +109,9 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;
+  min-height: 100svh; /* static viewport height — avoids browser-chrome resize jump */
   line-height: 1.6;
+  overflow-x: hidden; /* page-level horizontal scroll guard */
 }
 
 *:focus-visible {

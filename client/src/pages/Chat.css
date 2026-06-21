@@ -6,12 +6,15 @@
 /* ── Root layout ─────────────────────────────────────────────────────────── */
 .ec-root {
   display: flex;
-  height: 100dvh;
+  height: 100vh;   /* fallback: browsers without dvh support */
+  height: 100dvh;  /* dynamic viewport — shrinks when keyboard opens */
   background: #0B0B0B;
   color: var(--stone-100);
   font-family: var(--font-arabic);
   overflow: hidden;
+  overflow-x: hidden;
   position: relative;
+  overscroll-behavior: none; /* prevent pull-to-refresh and rubber-band scroll */
 }
 
 /* ── Mobile overlay ──────────────────────────────────────────────────────── */
@@ -54,6 +57,7 @@
     top: auto; right: auto; bottom: auto;
     transform: none !important;
     flex-shrink: 0;
+    height: 100vh;   /* fallback */
     height: 100dvh;
     transition: none;
   }
@@ -419,9 +423,10 @@
   display: flex;
   flex-direction: column;
   min-width: 0;
-  height: 100dvh;
+  /* height is set by align-items:stretch from parent .ec-root — no dvh needed here */
   background: #0B0B0B;
-  position: relative;
+  position: relative; /* settings panel, profile menu position against this */
+  overflow-x: hidden; /* prevent any wide child from causing horizontal scroll */
 }
 
 /* ── Topbar ──────────────────────────────────────────────────────────────── */
@@ -670,11 +675,12 @@
 .ec-messages-wrap {
   flex: 1;
   overflow-y: auto;
+  overflow-x: hidden;
   min-height: 0;
+  overscroll-behavior: contain; /* prevent scroll chaining to root */
 }
 .ec-messages-wrap::-webkit-scrollbar { width: 4px; }
 .ec-messages-wrap::-webkit-scrollbar-thumb { background: rgba(212,175,55,0.15); border-radius: 99px; }
-.ec-messages-wrap--welcome { overflow: hidden; }
 
 .ec-messages {
   max-width: 800px;
@@ -683,6 +689,9 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
+  overflow-x: hidden; /* extra guard: prevent wide flex children from escaping */
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* ── Welcome screen ──────────────────────────────────────────────────────── */
@@ -700,7 +709,7 @@
   top: 0;
   left: 50%;
   transform: translateX(-50%);
-  width: 400px;
+  width: min(400px, 100%); /* cap at container width on narrow screens */
   height: 200px;
   background: radial-gradient(ellipse at center, rgba(212, 175, 55, 0.07) 0%, transparent 70%);
   pointer-events: none;
@@ -840,6 +849,8 @@
   line-height: 1.7;
   color: var(--stone-100);
   font-family: var(--font-arabic);
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 /* ── AI message ──────────────────────────────────────────────────────────── */
@@ -936,7 +947,13 @@
 }
 
 /* AI body */
-.ec-msg-ai-body { font-family: var(--font-arabic); }
+.ec-msg-ai-body {
+  font-family: var(--font-arabic);
+  overflow-x: auto;          /* allow code blocks / tables to scroll horizontally */
+  word-break: break-word;
+  overflow-wrap: break-word;
+  min-width: 0;              /* prevent flex min-width:auto from overflowing parent */
+}
 
 /* Streaming cursor */
 .ec-cursor {
@@ -1061,6 +1078,7 @@
    ═══════════════════════════════════════════════════════════════════════════ */
 .ec-input-area {
   padding: 12px 24px 18px;
+  padding-bottom: calc(18px + env(safe-area-inset-bottom)); /* notch / home-bar devices */
   background: linear-gradient(to top, #0B0B0B 85%, transparent);
   flex-shrink: 0;
 }
@@ -1374,111 +1392,38 @@
 /* ═══════════════════════════════════════════════════════════════════════════
    RESPONSIVE
    ═══════════════════════════════════════════════════════════════════════════ */
-
-/* ── Sidebar: cap width on narrow phones ─────────────────────────────────── */
-@media (max-width: 1023px) {
-  .ec-sidebar { max-width: 82vw; }
-}
-
-/* ── ≤ 768px: tablet / large phone ──────────────────────────────────────── */
 @media (max-width: 768px) {
   .ec-welcome-cards { grid-template-columns: repeat(2, 1fr); }
-  .ec-topbar-title  { max-width: 160px; }
-  .ec-status-badge  { display: none; }
-  .ec-messages      { padding: 20px 14px 16px; }
-  .ec-input-area    { padding: 8px 12px 14px; }
-  .ec-msg-user-bubble { max-width: 88%; }
-
-  /* Keep settings panel fully inside the viewport */
-  .ec-settings-panel { right: 8px; left: 8px; width: auto; top: 58px; }
-}
-
-/* ── ≤ 640px: most phones (landscape & portrait) ─────────────────────────── */
-@media (max-width: 640px) {
-  /* Action buttons: collapse to icon-only to prevent overflow */
-  .ec-msg-action {
-    font-size: 0;       /* hides text nodes, SVG unaffected */
-    letter-spacing: 0;
-    padding: 6px 8px;
-    gap: 0;
-    border-radius: 8px;
+  .ec-topbar-title { max-width: 160px; }
+  .ec-status-badge { display: none; }
+  .ec-messages { padding: 20px 16px 16px; }
+  .ec-input-area {
+    padding: 10px 14px 16px;
+    padding-bottom: calc(16px + env(safe-area-inset-bottom));
   }
-  .ec-msg-action svg { flex-shrink: 0; }
-
-  /* Hide Enter/Shift+Enter hint — not relevant on touch keyboards */
-  .ec-input-hint { display: none; }
-
-  /* Confidence reason is too verbose on small screens */
-  .ec-confidence-reason { display: none; }
+  .ec-msg-user-bubble { max-width: 88%; }
+  /* Prevent iOS Safari from auto-zooming on textarea focus */
+  .ec-textarea { font-size: 1rem; }
 }
 
-/* ── ≤ 480px: small phone (portrait primary target) ─────────────────────── */
 @media (max-width: 480px) {
-  /* Welcome — compressed to fit the viewport without scroll */
-  .ec-welcome           { padding: 14px 10px 10px; overflow: hidden; }
-  .ec-welcome-glow      { display: none; }
-  .ec-welcome-icon      { width: 44px; height: 44px; border-radius: 12px; margin-bottom: 10px; }
-  .ec-welcome-title     { font-size: 1.12rem; margin: 0 0 6px; }
-  .ec-welcome-sub       { font-size: 0.78rem; margin-bottom: 12px; }
-  .ec-welcome-cards     { grid-template-columns: 1fr 1fr; gap: 6px; }
-  .ec-welcome-card      { padding: 10px; }
-  .ec-welcome-card-icon { width: 28px; height: 28px; border-radius: 8px; margin-bottom: 1px; }
-  .ec-welcome-card-label{ font-size: 0.74rem; }
-  .ec-welcome-card-desc { font-size: 0.64rem; }
-
-  /* Topbar */
-  .ec-topbar            { padding: 0 10px; height: 50px; gap: 4px; }
-  .ec-topbar-left,
-  .ec-topbar-right      { gap: 2px; }
-  .ec-topbar-title-group{ display: none; }
-  .ec-icon-btn          { width: 32px; height: 32px; }
-
-  /* Messages container */
-  .ec-messages          { padding: 12px 10px 10px; gap: 14px; }
-
-  /* User bubble */
-  .ec-msg-user-bubble   { max-width: 92%; font-size: 0.88rem; padding: 10px 13px; }
-
-  /* AI card */
-  .ec-msg-ai            { padding: 12px 12px; }
-  .ec-msg-ai-header     { gap: 8px; margin-bottom: 10px; }
-  .ec-msg-ai-name       { font-size: 0.74rem; }
-  .ec-msg-ai-model      { font-size: 0.6rem; }
-  .ec-msg-timestamp     { font-size: 0.62rem; }
-
-  /* Action buttons row */
-  .ec-msg-actions       { gap: 3px; margin-top: 8px; }
-  .ec-msg-actions-group { gap: 2px; flex-wrap: wrap; }
-
-  /* Citation card header: stack info on two lines */
-  .ec-cite-header       { flex-wrap: wrap; gap: 4px; }
-  .ec-cite-ref          { flex: 1 1 100%; }
-  .ec-cite-meta         { padding-right: 4px; gap: 4px; }
-  .ec-cite-year         { display: none; }   /* too much text on small screen */
-
-  /* Confidence badge */
-  .ec-confidence        { font-size: 0.72rem; padding: 6px 10px; }
-
-  /* Input area — flush to bottom; safe-area handles iPhone home bar */
-  .ec-input-area        { padding: 6px 10px env(safe-area-inset-bottom, 0px); }
-  .ec-textarea          { font-size: 0.9rem; padding: 12px 14px 6px; }
-  .ec-input-toolbar     { padding: 4px 8px 8px; }
-  .ec-char-count        { font-size: 0.62rem; }
-
-  /* Settings panel */
-  .ec-settings-panel    { right: 6px; left: 6px; width: auto; top: 54px; }
-
-  /* Profile menu: extend rightward from avatar (stays in viewport) */
-  .ec-profile-menu      { left: 0; right: auto; min-width: 200px; }
+  .ec-welcome { padding: 32px 12px 16px; }
+  .ec-welcome-cards { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .ec-welcome-title { font-size: 1.35rem; }
+  .ec-topbar { padding: 0 12px; height: 50px; }
+  .ec-topbar-title-group { display: none; }
+  .ec-messages { padding: 16px 12px 12px; gap: 18px; }
+  .ec-msg-ai { padding: 14px 14px; }
+  .ec-input-area {
+    padding: 8px 12px 12px;
+    padding-bottom: calc(12px + env(safe-area-inset-bottom));
+  }
+  /* Align settings panel below the shorter 50px topbar */
+  .ec-settings-panel { top: 58px; right: 12px; width: calc(100% - 24px); }
 }
 
-/* ── ≤ 380px: very compact phones ───────────────────────────────────────── */
 @media (max-width: 380px) {
-  .ec-welcome-cards  { grid-template-columns: 1fr; }
-  .ec-topbar-right   { gap: 1px; }
-  .ec-messages       { padding: 10px 8px 8px; }
-  .ec-msg-ai         { padding: 10px 10px; }
-  .ec-input-area     { padding: 6px 8px env(safe-area-inset-bottom, 0px); }
+  .ec-welcome-cards { grid-template-columns: 1fr; }
 }
 
 /* ── Reduced motion ───────────────────────────────────────────────────────── */
@@ -1488,195 +1433,4 @@
   .ec-thinking-dots span,
   .ec-status-dot { animation: none; opacity: 0.7; }
   .ec-sb-skeleton { animation: none; }
-}
-
-/* ═══════════════════════════════════════════════════════════════════════════
-   KNOWLEDGE BASE — Confidence, Citations, Out-of-scope
-   ═══════════════════════════════════════════════════════════════════════════ */
-
-/* ── Out-of-scope warning ─────────────────────────────────────────────────── */
-.ec-out-of-scope {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  margin-top: 12px;
-  padding: 10px 14px;
-  background: rgba(239, 68, 68, 0.08);
-  border: 1px solid rgba(239, 68, 68, 0.25);
-  border-radius: 10px;
-  color: #f87171;
-  font-size: 0.78rem;
-  line-height: 1.5;
-  direction: rtl;
-}
-
-.ec-out-of-scope svg { flex-shrink: 0; margin-top: 1px; }
-
-/* ── Confidence badge ────────────────────────────────────────────────────── */
-.ec-confidence {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 10px;
-  padding: 7px 12px;
-  border-radius: 8px;
-  font-size: 0.77rem;
-  direction: rtl;
-}
-
-.ec-confidence--high {
-  background: rgba(34, 197, 94, 0.08);
-  border: 1px solid rgba(34, 197, 94, 0.22);
-  color: #4ade80;
-}
-
-.ec-confidence--medium {
-  background: rgba(234, 179, 8, 0.08);
-  border: 1px solid rgba(234, 179, 8, 0.22);
-  color: #facc15;
-}
-
-.ec-confidence--low {
-  background: rgba(249, 115, 22, 0.08);
-  border: 1px solid rgba(249, 115, 22, 0.22);
-  color: #fb923c;
-}
-
-.ec-confidence svg { flex-shrink: 0; }
-
-.ec-confidence-label { font-weight: 700; }
-
-.ec-confidence-reason {
-  color: inherit;
-  opacity: 0.75;
-  font-size: 0.74rem;
-}
-
-/* ── Citations container ──────────────────────────────────────────────────── */
-.ec-citations { margin-top: 12px; }
-
-.ec-citations-toggle {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  background: rgba(212, 175, 55, 0.07);
-  border: 1px solid rgba(212, 175, 55, 0.2);
-  border-radius: 8px;
-  padding: 7px 13px;
-  color: rgba(212, 175, 55, 0.9);
-  font-size: 0.78rem;
-  font-weight: 600;
-  cursor: pointer;
-  width: 100%;
-  direction: rtl;
-  transition: background 0.15s, border-color 0.15s;
-}
-
-.ec-citations-toggle:hover {
-  background: rgba(212, 175, 55, 0.13);
-  border-color: rgba(212, 175, 55, 0.35);
-}
-
-.ec-citations-toggle svg:last-child { margin-right: auto; }
-
-/* ── Citations list ──────────────────────────────────────────────────────── */
-.ec-citations-list {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin-top: 8px;
-}
-
-/* ── Single citation card ────────────────────────────────────────────────── */
-.ec-cite-card {
-  border: 1px solid rgba(212, 175, 55, 0.15);
-  border-radius: 10px;
-  overflow: hidden;
-  background: rgba(212, 175, 55, 0.04);
-}
-
-.ec-cite-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 10px;
-  padding: 9px 13px;
-  width: 100%;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  direction: rtl;
-  transition: background 0.12s;
-}
-
-.ec-cite-header:hover { background: rgba(212, 175, 55, 0.07); }
-
-.ec-cite-ref {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  flex: 1;
-  min-width: 0;
-}
-
-.ec-cite-num {
-  font-size: 0.72rem;
-  font-weight: 700;
-  color: #d4af37;
-  background: rgba(212, 175, 55, 0.15);
-  border-radius: 4px;
-  padding: 2px 6px;
-  flex-shrink: 0;
-}
-
-.ec-cite-law {
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.85);
-  line-height: 1.4;
-  text-align: right;
-  white-space: normal;
-}
-
-.ec-cite-meta {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  flex-shrink: 0;
-}
-
-.ec-cite-article {
-  font-size: 0.72rem;
-  font-weight: 700;
-  color: #d4af37;
-  white-space: nowrap;
-}
-
-.ec-cite-year {
-  font-size: 0.68rem;
-  color: rgba(255, 255, 255, 0.4);
-  white-space: nowrap;
-}
-
-.ec-cite-meta svg { color: rgba(212, 175, 55, 0.6); flex-shrink: 0; }
-
-/* ── Citation expanded body ──────────────────────────────────────────────── */
-.ec-cite-body {
-  padding: 0 13px 12px;
-  border-top: 1px solid rgba(212, 175, 55, 0.1);
-}
-
-.ec-cite-chapter {
-  font-size: 0.72rem;
-  color: rgba(212, 175, 55, 0.7);
-  font-weight: 600;
-  margin: 10px 0 6px;
-}
-
-.ec-cite-text {
-  font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.75);
-  line-height: 1.75;
-  margin: 0;
 }
