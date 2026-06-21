@@ -71,12 +71,15 @@ ${base}`.trim();
 === قاعدة المعرفة القانونية (مواد مسترجعة ذات صلة) ===
 هذه المواد يجب الاستشهاد بها في إجابتك وإدراج معرّفاتها في used_article_ids:
 
-${retrievedArticles.map((a, i) => `--- [${i + 1}] معرّف: ${a.id}
+${retrievedArticles.map((a, i) => {
+      const text = String(a.article_text || '');
+      const trimmed = text.length > 600 ? text.slice(0, 600) + '...' : text;
+      return `--- [${i + 1}] معرّف: ${a.id}
 القانون: ${a.law_name} رقم ${a.law_number} لسنة ${a.year}
 ${a.chapter ? `الفصل: ${a.chapter}` : ''}
 المادة رقم: ${a.article_number}
-النص: ${a.article_text}
-`).join('\n')}`
+النص: ${trimmed}`;
+    }).join('\n\n')}`
     : `
 
 === قاعدة المعرفة ===
@@ -124,20 +127,20 @@ async function getGroqReply(userMessage) {
     let raw = await callGroq(buildSystemPrompt(retrievedArticles, false), userMessage, model, apiKey);
     let parsed = parseRaw(raw);
 
-    // Retry if CJK/foreign script detected in any text field
-    if (!parsed || hasForeignScript(parsed.answer || '') || hasForeignScript(parsed.confidence_reason || '')) {
+    // Retry only if clear CJK foreign script detected (not Greek/Cyrillic false positives)
+    if (!parsed || hasForeignScript(parsed.answer || '')) {
       console.warn('[service] Foreign script detected — retrying with stronger prompt');
       raw = await callGroq(buildSystemPrompt(retrievedArticles, true), userMessage, model, apiKey);
       parsed = parseRaw(raw);
     }
 
-    // If still bad after retry, return a clean Arabic fallback
-    if (!parsed || hasForeignScript(parsed.answer || '') || hasForeignScript(parsed.confidence_reason || '')) {
+    // If still no valid JSON after retry, return fallback
+    if (!parsed) {
       return {
-        reply: 'عذراً، حدث خطأ في معالجة اللغة. يُرجى إعادة صياغة سؤالك والمحاولة مرة أخرى.',
+        reply: 'عذراً، لم أتمكن من معالجة طلبك. يُرجى المحاولة مرة أخرى.',
         citations: [],
         confidence: 'low',
-        confidenceReason: 'خطأ في معالجة اللغة.',
+        confidenceReason: '',
         isOutOfScope: false,
       };
     }
@@ -169,15 +172,21 @@ async function getGroqReply(userMessage) {
       isOutOfScope: false,
     };
   } catch (error) {
-    console.error('Groq API error:', error.response?.data || error.message);
     const status = error?.response?.status;
-    const detail =
-      error?.response?.data?.error?.message ||
-      error?.response?.data?.message ||
-      error?.message ||
-      'خطأ غير معروف.';
+    console.error('Groq API error:', status, error.response?.data || error.message);
+
+    if (status === 429) {
+      return {
+        reply: 'الخادم مشغول حالياً بسبب كثرة الطلبات. يُرجى الانتظار لحظة ثم المحاولة مرة أخرى.',
+        citations: [],
+        confidence: 'low',
+        confidenceReason: 'تجاوز حد الطلبات المسموح به مؤقتاً.',
+        isOutOfScope: false,
+      };
+    }
+
     return {
-      reply: `فشل الاتصال بالخادم${status ? ` (HTTP ${status})` : ''}: ${detail}`,
+      reply: 'حدث خطأ في الاتصال بالخادم. يُرجى المحاولة مرة أخرى.',
       citations: [],
       confidence: 'low',
       confidenceReason: '',

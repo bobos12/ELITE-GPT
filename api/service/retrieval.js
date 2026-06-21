@@ -100,7 +100,7 @@ function scoreArticle(article, queryTokens) {
   return score;
 }
 
-function retrieveRelevant(query, topK = 5) {
+function retrieveRelevant(query, topK = 3) {
   const laws = loadLaws();
   if (!laws.length) return [];
   const queryTokens = tokenize(query);
