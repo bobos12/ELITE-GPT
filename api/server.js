@@ -21,11 +21,11 @@ const allowedOrigins = process.env.CORS_ORIGIN
 
 app.use(cors({
   origin: (origin, cb) => {
-    if (!origin || allowedOrigins.includes(origin) || process.env.NODE_ENV !== 'production') {
-      cb(null, true);
-    } else {
-      cb(new Error(`CORS: origin ${origin} not allowed`));
-    }
+    if (!origin) return cb(null, true);
+    if (allowedOrigins.includes(origin)) return cb(null, true);
+    if (process.env.NODE_ENV !== 'production') return cb(null, true);
+    if (origin.endsWith('.vercel.app')) return cb(null, true);
+    cb(new Error(`CORS: origin ${origin} not allowed`));
   },
   credentials: true,
 }));
@@ -75,7 +75,11 @@ app.use((err, req, res, _next) => {
 });
 
 // ── Start ──────────────────────────────────────────────────────────────────────
-const PORT = Number(process.env.PORT) || 5000;
-app.listen(PORT, () => {
-  console.log(`ELITE API running on http://localhost:${PORT}`);
-});
+if (require.main === module) {
+  const PORT = Number(process.env.PORT) || 5000;
+  app.listen(PORT, () => {
+    console.log(`ELITE API running on http://localhost:${PORT}`);
+  });
+}
+
+module.exports = app;

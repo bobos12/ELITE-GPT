@@ -26,10 +26,12 @@ api/.env
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+*.log
+*.err
 api/fonts/api.log
 api/fonts/api.err
-react.log
-react.err
+client/react.log
+client/react.err
 
 # uploaded user files
 api/storage/documents/
@@ -37,3 +39,4 @@ api/storage/documents/
 # misc
 .DS_Store
 query
+.vercel
