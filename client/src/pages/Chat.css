@@ -674,6 +674,7 @@
 }
 .ec-messages-wrap::-webkit-scrollbar { width: 4px; }
 .ec-messages-wrap::-webkit-scrollbar-thumb { background: rgba(212,175,55,0.15); border-radius: 99px; }
+.ec-messages-wrap--welcome { overflow: hidden; }
 
 .ec-messages {
   max-width: 800px;
@@ -1413,16 +1414,17 @@
 
 /* ── ≤ 480px: small phone (portrait primary target) ─────────────────────── */
 @media (max-width: 480px) {
-  /* Welcome */
-  .ec-welcome           { padding: 24px 10px 12px; overflow: hidden; }
-  .ec-welcome-glow      { width: 100%; }   /* prevent horizontal bleed */
-  .ec-welcome-cards     { grid-template-columns: 1fr 1fr; gap: 8px; }
-  .ec-welcome-card      { padding: 12px; }
-  .ec-welcome-card-icon { width: 32px; height: 32px; border-radius: 8px; margin-bottom: 2px; }
-  .ec-welcome-card-label{ font-size: 0.76rem; }
-  .ec-welcome-card-desc { font-size: 0.67rem; }
-  .ec-welcome-title     { font-size: 1.28rem; }
-  .ec-welcome-sub       { font-size: 0.83rem; margin-bottom: 20px; }
+  /* Welcome — compressed to fit the viewport without scroll */
+  .ec-welcome           { padding: 14px 10px 10px; overflow: hidden; }
+  .ec-welcome-glow      { display: none; }
+  .ec-welcome-icon      { width: 44px; height: 44px; border-radius: 12px; margin-bottom: 10px; }
+  .ec-welcome-title     { font-size: 1.12rem; margin: 0 0 6px; }
+  .ec-welcome-sub       { font-size: 0.78rem; margin-bottom: 12px; }
+  .ec-welcome-cards     { grid-template-columns: 1fr 1fr; gap: 6px; }
+  .ec-welcome-card      { padding: 10px; }
+  .ec-welcome-card-icon { width: 28px; height: 28px; border-radius: 8px; margin-bottom: 1px; }
+  .ec-welcome-card-label{ font-size: 0.74rem; }
+  .ec-welcome-card-desc { font-size: 0.64rem; }
 
   /* Topbar */
   .ec-topbar            { padding: 0 10px; height: 50px; gap: 4px; }
@@ -1457,8 +1459,8 @@
   /* Confidence badge */
   .ec-confidence        { font-size: 0.72rem; padding: 6px 10px; }
 
-  /* Input area */
-  .ec-input-area        { padding: 6px 10px 10px; }
+  /* Input area — flush to bottom; safe-area handles iPhone home bar */
+  .ec-input-area        { padding: 6px 10px env(safe-area-inset-bottom, 0px); }
   .ec-textarea          { font-size: 0.9rem; padding: 12px 14px 6px; }
   .ec-input-toolbar     { padding: 4px 8px 8px; }
   .ec-char-count        { font-size: 0.62rem; }
@@ -1476,7 +1478,7 @@
   .ec-topbar-right   { gap: 1px; }
   .ec-messages       { padding: 10px 8px 8px; }
   .ec-msg-ai         { padding: 10px 10px; }
-  .ec-input-area     { padding: 6px 8px 10px; }
+  .ec-input-area     { padding: 6px 8px env(safe-area-inset-bottom, 0px); }
 }
 
 /* ── Reduced motion ───────────────────────────────────────────────────────── */

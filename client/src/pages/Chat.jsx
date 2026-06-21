@@ -821,7 +821,7 @@ export default function EliteChat() {
         </AnimatePresence>
 
         {/* ── MESSAGES AREA ─────────────────────────────────────────────── */}
-        <div className="ec-messages-wrap">
+        <div className={`ec-messages-wrap${showWelcome ? ' ec-messages-wrap--welcome' : ''}`}>
           <div className="ec-messages">
 
             {/* Welcome screen */}
@@ -1122,8 +1122,6 @@ export default function EliteChat() {
               </div>
             </div>
           </div>
-
-          <p className="ec-input-hint">اضغط Enter للإرسال • Shift+Enter للسطر الجديد</p>
         </div>
       </div>
 

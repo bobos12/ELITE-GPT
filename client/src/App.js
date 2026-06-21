@@ -18,7 +18,10 @@ import { useEffect } from 'react';
 
 function AppLayout() {
   const location = useLocation();
-  const hideNavbar = location.pathname.startsWith('/chat') || location.pathname.startsWith('/dashboard');
+  const hideNavbar = location.pathname.startsWith('/chat') ||
+                     location.pathname.startsWith('/dashboard') ||
+                     location.pathname === '/login' ||
+                     location.pathname === '/signup';
 
   useEffect(() => {
     if (!location.hash) return;
