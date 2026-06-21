@@ -5,7 +5,7 @@ import {
   Settings, FileText, X, MessageSquare, Bookmark, LayoutDashboard,
   Globe, AlignLeft, Paperclip, AlertCircle, Building2, HardHat,
   Landmark, Home, Shield, ThumbsUp, ThumbsDown, Bot,
-  LogOut, BookOpen, ChevronDown,
+  LogOut, BookOpen,
 } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
