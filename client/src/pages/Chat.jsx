@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Send, Scale, User, Menu, Plus, Search, Trash2, Edit3,
-  Copy, Star, StarOff, RefreshCw, Lightbulb, ChevronRight,
+  Copy, Star, StarOff, RefreshCw, Lightbulb,
   Settings, FileText, X, MessageSquare, Bookmark, LayoutDashboard,
   Globe, AlignLeft, Paperclip, AlertCircle, Building2, HardHat,
   Landmark, Home, Shield, ThumbsUp, ThumbsDown, Bot,
-  LogOut, BookOpen,
+  LogOut, BookOpen, Quote, ChevronDown, CheckCircle2,
+  MinusCircle, AlertTriangle,
 } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -197,6 +198,9 @@ export default function EliteChat() {
       type: x.role === 'assistant' ? 'assistant' : 'user',
       content: x.content,
       timestamp: x.createdAt ? new Date(x.createdAt) : new Date(),
+      citations: [],
+      confidence: '',
+      confidenceReason: '',
     }));
     setMessages(msgs);
     setActiveChatId(id);
@@ -329,7 +333,12 @@ export default function EliteChat() {
       const returnedId = data?.chatId;
       if (returnedId && returnedId !== activeChatId) setActiveChatId(returnedId);
 
-      const assistantMsg = { id: Date.now() + 1, type: 'assistant', content, timestamp: new Date() };
+      const assistantMsg = {
+        id: Date.now() + 1, type: 'assistant', content, timestamp: new Date(),
+        citations: data?.citations || [],
+        confidence: data?.confidence || '',
+        confidenceReason: data?.confidenceReason || '',
+      };
       setMessages(prev => [...prev, assistantMsg]);
       setIsLoading(false);
       startStreaming(content, assistantMsg.id);
@@ -395,7 +404,12 @@ export default function EliteChat() {
       });
       const data = await res.json().catch(() => ({}));
       const content = data?.reply || 'لا توجد إجابة.';
-      const assistantMsg = { id: Date.now() + 1, type: 'assistant', content, timestamp: new Date() };
+      const assistantMsg = {
+        id: Date.now() + 1, type: 'assistant', content, timestamp: new Date(),
+        citations: data?.citations || [],
+        confidence: data?.confidence || '',
+        confidenceReason: data?.confidenceReason || '',
+      };
       setMessages(prev => [...prev, assistantMsg]);
       setIsLoading(false);
       startStreaming(content, assistantMsg.id);
@@ -415,13 +429,6 @@ export default function EliteChat() {
     sendAction(
       `اشرح لي الإجابة التالية بأسلوب بسيط جداً يفهمه شخص عادي وبدون مصطلحات قانونية معقدة:\n\n${content}`,
       'اشرح بأسلوب أبسط'
-    );
-  }, [sendAction]);
-
-  const continueResponse = useCallback((content) => {
-    sendAction(
-      `أكمل هذه الإجابة وأضف المزيد من التفاصيل والمعلومات المفيدة:\n\n${content}`,
-      'أكمل الإجابة'
     );
   }, [sendAction]);
 
@@ -663,7 +670,7 @@ export default function EliteChat() {
               <div className="ec-topbar-title">{activeTitle || 'ELITE Legal AI'}</div>
               <div className="ec-topbar-model">
                 <Bot size={11} />
-                <span>Llama 3.3 70B</span>
+                <span>ELITE SMART</span>
               </div>
             </div>
           </div>
@@ -821,7 +828,6 @@ export default function EliteChat() {
                       </div>
                       <div className="ec-msg-ai-identity">
                         <span className="ec-msg-ai-name">ELITE Legal AI</span>
-                        <span className="ec-msg-ai-model">Llama 3.3 70B</span>
                       </div>
                       <span className="ec-msg-timestamp">{formatTime(msg.timestamp)}</span>
                       {isStreaming && (
@@ -837,14 +843,57 @@ export default function EliteChat() {
                       {isStreaming && <span className="ec-cursor" aria-hidden="true" />}
                     </div>
 
-                    {/* Disclaimer */}
-                    {!isStreaming && (
-                      <div className="ec-disclaimer">
-                        <AlertCircle size={11} />
-                        <span>هذه معلومات قانونية عامة وليست استشارة قانونية متخصصة — يُنصح باستشارة محامٍ مرخص.</span>
+                    {/* Citations */}
+                    {!isStreaming && msg.citations && msg.citations.length > 0 && (
+                      <div className="ec-citations">
+                        <div className="ec-citations-header" onClick={() => {
+                          const el = document.getElementById(`citations-body-${msg.id}`);
+                          if (el) el.classList.toggle('ec-citations-open');
+                        }}>
+                          <div className="ec-citations-title">
+                            <Quote size={12} />
+                            <span>الاستشهادات القانونية ({msg.citations.length})</span>
+                          </div>
+                          <ChevronDown size={14} className="ec-citations-chevron" />
+                        </div>
+                        <div id={`citations-body-${msg.id}`} className="ec-citations-body">
+                          {msg.citations.map((cit, ci) => (
+                            <div key={ci} className="ec-citation-card">
+                              <div className="ec-citation-card-header">
+                                <div className="ec-citation-law">
+                                  <span className="ec-citation-law-name">{cit.law_name}</span>
+                                  <span className="ec-citation-law-number">رقم {cit.law_number} لسنة {cit.year}</span>
+                                </div>
+                                <div className="ec-citation-article-badge">
+                                  <span>مادة {cit.article_number}</span>
+                                </div>
+                              </div>
+                              {cit.chapter && (
+                                <div className="ec-citation-chapter">{cit.chapter}</div>
+                              )}
+                              <div className="ec-citation-text">{cit.article_text}</div>
+                            </div>
+                          ))}
+                        </div>
                       </div>
                     )}
 
+                    {/* Confidence Badge */}
+                    {!isStreaming && msg.confidence && (
+                      <div className={`ec-confidence ec-confidence--${msg.confidence}`}>
+                        {msg.confidence === 'high' && <CheckCircle2 size={14} />}
+                        {msg.confidence === 'medium' && <MinusCircle size={14} />}
+                        {msg.confidence === 'low' && <AlertTriangle size={14} />}
+                        <span className="ec-confidence-label">
+                          {msg.confidence === 'high' && 'ثقة عالية'}
+                          {msg.confidence === 'medium' && 'ثقة متوسطة'}
+                          {msg.confidence === 'low' && 'ثقة منخفضة'}
+                        </span>
+                        {msg.confidenceReason && (
+                          <span className="ec-confidence-reason">— {msg.confidenceReason}</span>
+                        )}
+                      </div>
+                    )}
                     {/* Actions */}
                     {!isStreaming && (
                       <div className="ec-msg-actions">
@@ -868,9 +917,6 @@ export default function EliteChat() {
                           </button>
                           <button className="ec-msg-action" type="button" onClick={() => explainSimply(msg.content)}>
                             <Lightbulb size={12} /> تبسيط
-                          </button>
-                          <button className="ec-msg-action" type="button" onClick={() => continueResponse(msg.content)}>
-                            <ChevronRight size={12} /> أكمل
                           </button>
                           <button className={`ec-msg-action ${isFavorite(msg.id) ? 'active' : ''}`}
                             type="button" onClick={() => toggleFavorite(msg)}>

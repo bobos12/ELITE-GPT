@@ -1,10 +1,133 @@
 const bcrypt = require('bcryptjs');
+const fs = require('fs');
+const path = require('path');
+
+const DATA_FILE = path.join(__dirname, 'storage', 'users.json');
 
 const users = new Map();
 const chats = new Map();
 let nextUserId = 1;
 let nextChatId = 1;
 let nextDocId = 1;
+
+function computeNextIdFromStrings(arr) {
+  const nums = (arr || []).map(String).map(s => parseInt(s, 10)).filter(n => !isNaN(n));
+  const max = nums.length ? Math.max(...nums) : 0;
+  return max + 1;
+}
+
+function ensureStorageDir() {
+  const dir = path.dirname(DATA_FILE);
+  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+}
+
+function saveToDisk() {
+  try {
+    ensureStorageDir();
+    const data = {
+      users: Array.from(users.values()).map(u => ({
+        id: u.id,
+        email: u.email,
+        passwordHash: u.passwordHash,
+        chats: u.chats || [],
+        documents: (u.documents || []).map(d => ({
+          id: d.id,
+          title: d.title,
+          templateId: d.templateId,
+          fileName: d.fileName,
+          createdAt: d.createdAt ? (d.createdAt.toISOString ? d.createdAt.toISOString() : d.createdAt) : null,
+          pdfBuffer: d.pdfBuffer ? d.pdfBuffer.toString('base64') : null,
+        })),
+        favorites: (u.favorites || []).map(f => ({
+          id: f.id,
+          content: f.content,
+          preview: f.preview,
+          savedAt: f.savedAt ? (f.savedAt.toISOString ? f.savedAt.toISOString() : f.savedAt) : null,
+        })),
+      })),
+      chats: Array.from(chats.values()).map(c => ({
+        id: c.id,
+        userId: c.userId,
+        title: c.title,
+        messages: (c.messages || []).map(m => ({
+          id: m.id,
+          role: m.role,
+          content: m.content,
+          createdAt: m.createdAt ? (m.createdAt.toISOString ? m.createdAt.toISOString() : m.createdAt) : null,
+        })),
+        createdAt: c.createdAt ? (c.createdAt.toISOString ? c.createdAt.toISOString() : c.createdAt) : null,
+        updatedAt: c.updatedAt ? (c.updatedAt.toISOString ? c.updatedAt.toISOString() : c.updatedAt) : null,
+      })),
+      nextUserId,
+      nextChatId,
+      nextDocId,
+    };
+    fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2), 'utf8');
+  } catch (err) {
+    console.error('Failed to save users to disk:', err);
+  }
+}
+
+function loadFromDisk() {
+  try {
+    if (!fs.existsSync(DATA_FILE)) return;
+    const raw = fs.readFileSync(DATA_FILE, 'utf8');
+    if (!raw) return;
+    const data = JSON.parse(raw);
+    (data.users || []).forEach(u => {
+      const user = {
+        id: u.id,
+        email: u.email,
+        passwordHash: u.passwordHash,
+        chats: u.chats || [],
+        documents: (u.documents || []).map(d => ({
+          id: d.id,
+          title: d.title,
+          templateId: d.templateId,
+          fileName: d.fileName,
+          createdAt: d.createdAt ? new Date(d.createdAt) : new Date(),
+          pdfBuffer: d.pdfBuffer ? Buffer.from(d.pdfBuffer, 'base64') : null,
+        })),
+        favorites: (u.favorites || []).map(f => ({
+          id: f.id,
+          content: f.content,
+          preview: f.preview,
+          savedAt: f.savedAt ? new Date(f.savedAt) : null,
+        })),
+      };
+      users.set(user.id, user);
+    });
+    (data.chats || []).forEach(c => {
+      const chat = {
+        id: c.id,
+        userId: c.userId,
+        title: c.title,
+        messages: (c.messages || []).map(m => ({
+          id: m.id,
+          role: m.role,
+          content: m.content,
+          createdAt: m.createdAt ? new Date(m.createdAt) : new Date(),
+        })),
+        createdAt: c.createdAt ? new Date(c.createdAt) : new Date(),
+        updatedAt: c.updatedAt ? new Date(c.updatedAt) : new Date(),
+      };
+      chats.set(chat.id, chat);
+    });
+    nextUserId = data.nextUserId || computeNextIdFromStrings(Array.from(users.keys()));
+    nextChatId = data.nextChatId || computeNextIdFromStrings(Array.from(chats.keys()));
+    const docIds = [];
+    for (const u of users.values()) {
+      for (const d of (u.documents || [])) {
+        if (d && d.id) docIds.push(d.id);
+      }
+    }
+    nextDocId = data.nextDocId || (docIds.length ? computeNextIdFromStrings(docIds) : 1);
+  } catch (err) {
+    console.error('Failed to load users from disk:', err);
+  }
+}
+
+loadFromDisk();
 
 // ── User ──────────────────────────────────────────────────────────────────────
 
@@ -22,12 +145,13 @@ exports.createUser = async (email, password) => {
     favorites: [],   // { id, content, savedAt }
   };
   users.set(id, user);
+  saveToDisk();
   return user;
 };
 
 exports.findUserByEmail = (email) => {
   for (const u of users.values()) {
-    if (u.email === email.toLowerCase()) return u;
+    if (u.email === String(email || '').toLowerCase()) return u;
   }
   return null;
 };
@@ -52,6 +176,7 @@ exports.createChat = (userId, title) => {
   chats.set(id, chat);
   const user = exports.findUserById(userId);
   if (user) user.chats.unshift(id);
+  saveToDisk();
   return chat;
 };
 
@@ -71,6 +196,7 @@ exports.updateChatTitle = (chatId, title) => {
   if (!chat) return null;
   chat.title = String(title || 'محادثة جديدة').trim() || 'محادثة جديدة';
   chat.updatedAt = new Date();
+  saveToDisk();
   return chat;
 };
 
@@ -80,6 +206,7 @@ exports.deleteChat = (chatId) => {
   const user = exports.findUserById(chat.userId);
   if (user) user.chats = user.chats.filter(id => id !== chatId);
   chats.delete(chatId);
+  saveToDisk();
   return true;
 };
 
@@ -89,10 +216,11 @@ exports.addChatMessage = (chatId, role, content) => {
   const message = { id: String(Date.now()), role, content, createdAt: new Date() };
   chat.messages.push(message);
   chat.updatedAt = new Date();
+  saveToDisk();
   return message;
 };
 
-// ── Documents (in-memory) ─────────────────────────────────────────────────────
+// ── Documents (persisted) ─────────────────────────────────────────────────────
 
 exports.getUserDocuments = (userId) => {
   const user = exports.findUserById(userId);
@@ -112,6 +240,7 @@ exports.addUserDocument = (userId, { title, templateId, fileName, pdfBuffer }) =
   const doc = { id, title, templateId, fileName, pdfBuffer, createdAt: new Date() };
   user.documents.unshift(doc);
   if (user.documents.length > 50) user.documents.length = 50;
+  saveToDisk();
   return doc;
 };
 
@@ -127,10 +256,11 @@ exports.deleteUserDocument = (userId, docId) => {
   const idx = user.documents.findIndex(d => d.id === docId);
   if (idx === -1) return false;
   user.documents.splice(idx, 1);
+  saveToDisk();
   return true;
 };
 
-// ── Favorites (in-memory) ─────────────────────────────────────────────────────
+// ── Favorites (persisted) ─────────────────────────────────────────────────────
 
 exports.getUserFavorites = (userId) => {
   const user = exports.findUserById(userId);
@@ -146,6 +276,7 @@ exports.addUserFavorite = (userId, { content, preview }) => {
   const fav = { id, content, preview: preview || content.slice(0, 200), savedAt: new Date() };
   user.favorites.unshift(fav);
   if (user.favorites.length > 200) user.favorites.length = 200;
+  saveToDisk();
   return fav;
 };
 
@@ -155,12 +286,13 @@ exports.removeUserFavorite = (userId, favId) => {
   const idx = user.favorites.findIndex(f => f.id === favId);
   if (idx === -1) return false;
   user.favorites.splice(idx, 1);
+  saveToDisk();
   return true;
 };
 
 // ── Seed user from env vars (survives every cold start) ──────────────────────
 // Set SEED_EMAIL + SEED_PASSWORD_HASH in Vercel env vars to guarantee a login
-// always works, even after the in-memory store resets.
+// always works, even after the store resets.
 ;(function seedFromEnv() {
   const email = (process.env.SEED_EMAIL || '').trim().toLowerCase();
   const hash  = (process.env.SEED_PASSWORD_HASH || '').trim();
@@ -168,6 +300,7 @@ exports.removeUserFavorite = (userId, favId) => {
   if (exports.findUserByEmail(email)) return;
   const id = 'seed-1';
   users.set(id, { id, email, passwordHash: hash, chats: [], documents: [], favorites: [] });
+  saveToDisk();
 })();
 
 // ── History (derived from chats) ──────────────────────────────────────────────

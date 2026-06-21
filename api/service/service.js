@@ -6,6 +6,46 @@ const { retrieveRelevant } = require('./retrieval');
 const OUT_OF_SCOPE_REPLY =
   'أنا مساعد قانوني متخصص في القانون المصري فقط، ولا أستطيع الإجابة على أسئلة خارج النطاق القانوني. يُرجى طرح سؤالك المتعلق بالقانون المصري وسأكون سعيداً بمساعدتك.';
 
+const GREETINGS = new Set([
+  'مرحبا', 'اهلا', 'أهلا', 'hello', 'hi', 'hey', 'سلام', 'السلام عليكم',
+  'وعليكم السلام', 'صباح الخير', 'مساء الخير', 'مساء النور', 'صباح النور',
+  'تحياتي', 'how are you', 'how are you?', 'good morning', 'good evening',
+]);
+
+function isGreeting(text) {
+  const raw = String(text || '').trim();
+  if (!raw) return false;
+  const normalized = raw.replace(/[؟?!!.,،]/g, '').trim().toLowerCase();
+  const words = normalized.split(/\s+/).filter(Boolean);
+  if (!words.length) return false;
+
+  // Direct set match after stripping punctuation only
+  const stripped = words.join('');
+  if (GREETINGS.has(stripped) || GREETINGS.has(normalized)) return true;
+
+  if (words.length <= 3) {
+    const joined = words.join(' ');
+    if (/^(مرحبا|اهلا|أهلا|hello|hi|hey|سلام|تحية)/i.test(joined)) return true;
+    if (/^السلام/i.test(joined)) return true;
+    if (/^(صباح|مساء) (الخير|النور)/i.test(joined)) return true;
+    if (/^(كيف|how) (حالك|are|حال)/i.test(joined)) return true;
+    if (/^(good )?(morning|evening|afternoon)/i.test(joined)) return true;
+  }
+  return false;
+}
+
+const SIMPLE_REPLIES = [
+  'مرحباً بك! أنا المستشار القانوني ELITE. كيف يمكنني مساعدتك في استشارة قانونية اليوم؟',
+  'أهلاً وسهلاً! أنا هنا للإجابة على استفساراتك القانونية. ماذا تريد أن تعرف عن القانون المصري؟',
+  'مرحباً! أنا مساعدك القانوني الذكي. هل لديك سؤال قانوني محدد تود الاستفسار عنه؟',
+  'أهلاً بك في ELITE للمحاماة. يسعدني تقديم المساعدة القانونية. ما هو استفسارك؟',
+  'مرحباً! مستشارك القانوني في خدمتك. هل تبحث عن معلومات حول قانون معين أو لديك قضية ترغب في الاستشارة بشأنها؟',
+];
+
+function getRandomGreetingReply() {
+  return SIMPLE_REPLIES[Math.floor(Math.random() * SIMPLE_REPLIES.length)];
+}
+
 // Detects ANY single CJK or other non-Arabic foreign-script character
 function hasForeignScript(text) {
   return /[　-鿿가-힯豈-﫿Ͱ-ϿЀ-ӿ؀-ۿ]/u.test(
@@ -113,6 +153,11 @@ async function getGroqReply(userMessage) {
   const apiKey = process.env.GROQ_API_KEY;
   if (!apiKey) {
     return { reply: 'مفتاح GROQ_API_KEY غير موجود.', citations: [], confidence: 'low', confidenceReason: '', isOutOfScope: false };
+  }
+
+  // Simple greeting/normal conversation — no citations or confidence needed
+  if (isGreeting(userMessage)) {
+    return { reply: getRandomGreetingReply(), citations: [], confidence: '', confidenceReason: '', isOutOfScope: false };
   }
 
   const model = process.env.GROQ_MODEL || 'llama-3.3-70b-versatile';
