@@ -1,0 +1,4 @@
+/* Ensure anchored sections aren't hidden under the fixed navbar */
+.home section {
+  scroll-margin-top: 96px;
+}

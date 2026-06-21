@@ -120,20 +120,6 @@ const Hero = () => {
                 <div className="btn-shine"></div>
             </button> 
           </div>
-          <div className="trust-items">
-            <div className="trust-item">
-              <div className="trust-icon-1">●</div>
-              <span>Available 24/7</span>
-            </div>
-            <div className="trust-item">
-              <div className="trust-icon-2">●</div>
-              <span>Secure & Confidential</span>
-            </div>
-            <div className="trust-item">
-              <div className="trust-icon-3">●</div>
-              <span>Egyptian Law Expert</span>
-            </div>
-          </div>
         </div>
         
 

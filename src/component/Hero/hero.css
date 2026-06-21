@@ -269,17 +269,6 @@
   transform: translate(3px, -3px);
 }
 
-/* Trust Indicators */
-
-.trust-items {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  color: white;
-  font-family: 'Montserrat', sans-serif;
-}
-
-
 /* Chat Widget Styles */
 .chat-widget {
   width: 600px;

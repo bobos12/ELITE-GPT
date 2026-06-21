@@ -1,0 +1,158 @@
+/* ─── ELITE Legal AI — Premium Gold Design System ──────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; }
+
+:root {
+  /* ── Dark Backgrounds ────────────────────────── */
+  --ink-950: #07080A;
+  --ink-900: #0C0D10;
+  --ink-800: #111318;
+  --ink-700: #181A21;
+  --ink-600: #1F2129;
+  --ink-500: #272932;
+
+  /* ── Gold (Primary — replaces jade) ─────────── */
+  --jade-700: #7A6010;   /* deep gold */
+  --jade-600: #9A7A1A;   /* medium dark gold */
+  --jade-500: #C9A227;   /* primary gold */
+  --jade-400: #D4AF37;   /* rich gold */
+  --jade-300: #E8C96A;   /* light gold */
+  --jade-glow: rgba(212, 175, 55, 0.09);
+  --jade-glow-md: rgba(212, 175, 55, 0.18);
+
+  /* ── Champagne accent ────────────────────────── */
+  --sand-600: #8A6B12;
+  --sand-500: #B8860B;
+  --sand-400: #D4AF37;
+  --sand-300: #F5E6A8;
+  --sand-glow: rgba(212, 175, 55, 0.12);
+
+  /* ── Stone (text) ────────────────────────────── */
+  --stone-50:  #F9F7F3;
+  --stone-100: #EEE9E0;
+  --stone-200: #D9D1C4;
+  --stone-300: #BEB5A6;
+  --stone-400: #9A9490;
+  --stone-500: #767068;
+  --stone-600: #56524E;
+
+  /* ── Semantic ─────────────────────────────────── */
+  --red-400: #F87171;
+  --red-glow: rgba(248, 113, 113, 0.12);
+  --green-400: #4ADE80;
+  --emerald-400: #34D399;
+
+  /* ── Borders ─────────────────────────────────── */
+  --border-1: rgba(255, 248, 220, 0.05);
+  --border-2: rgba(255, 248, 220, 0.09);
+  --border-3: rgba(255, 248, 220, 0.14);
+  --border-jade: rgba(212, 175, 55, 0.22);
+  --border-sand: rgba(212, 175, 55, 0.15);
+  --border-gold-bright: rgba(212, 175, 55, 0.35);
+
+  /* ── Typography ──────────────────────────────── */
+  --font-sans: 'IBM Plex Sans Arabic', 'Inter', system-ui, sans-serif;
+  --font-arabic: 'IBM Plex Sans Arabic', system-ui, sans-serif;
+  --font-display: 'IBM Plex Sans Arabic', 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+  /* ── Spacing ─────────────────────────────────── */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* ── Radii ───────────────────────────────────── */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --radius-2xl: 28px;
+  --radius-full: 9999px;
+
+  /* ── Shadows ─────────────────────────────────── */
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.35);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.45);
+  --shadow-lg: 0 12px 48px rgba(0,0,0,0.55);
+  --shadow-xl: 0 24px 80px rgba(0,0,0,0.65);
+  --shadow-jade: 0 4px 24px rgba(212,175,55,0.18);
+  --shadow-gold-lg: 0 8px 40px rgba(212,175,55,0.12);
+
+  /* ── Transitions ─────────────────────────────── */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.45, 0, 0.55, 1);
+  --dur-fast: 120ms;
+  --dur-base: 200ms;
+  --dur-slow: 350ms;
+}
+
+/* ─── Base ───────────────────────────────────────────────────────────────────── */
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--ink-950);
+  color: var(--stone-100);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+*:focus-visible {
+  outline: 2px solid var(--jade-400);
+  outline-offset: 2px;
+}
+
+/* ─── Scrollbar ──────────────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: rgba(212,175,55,0.2);
+  border-radius: var(--radius-full);
+}
+::-webkit-scrollbar-thumb:hover { background: rgba(212,175,55,0.35); }
+
+/* ─── Layout ─────────────────────────────────────────────────────────────────── */
+.app-content { padding-top: 72px; }
+
+/* ─── Gold gradient text utility ─────────────────────────────────────────────── */
+.text-gold {
+  background: linear-gradient(135deg, #F5E6A8 0%, #D4AF37 50%, #B8860B 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ─── Premium section badge ──────────────────────────────────────────────────── */
+.premium-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 14px;
+  background: var(--jade-glow);
+  border: 1px solid var(--border-jade);
+  border-radius: var(--radius-full);
+  color: var(--jade-300);
+  font-size: 0.76rem;
+  font-weight: 600;
+  font-family: var(--font-arabic);
+  letter-spacing: 0.04em;
+}
+
+@media (max-width: 768px) {
+  .app-content { padding-top: 64px; }
+}
