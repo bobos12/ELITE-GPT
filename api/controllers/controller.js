@@ -29,7 +29,7 @@ exports.handleChat = async (req, res) => {
     return res.json({
       reply: out.reply || 'No reply.',
       citations: out.citations || [],
-      confidence: out.confidence || 'medium',
+      confidence: out.confidence || '', // '' for greetings/small-talk → no badge
       confidenceReason: out.confidenceReason || '',
       isOutOfScope: out.isOutOfScope || false,
       chatId: activeChatId,
@@ -52,7 +52,7 @@ exports.handleLocalChat = async (req, res) => {
     return res.json({
       reply: out.reply || 'No reply.',
       citations: out.citations || [],
-      confidence: out.confidence || 'medium',
+      confidence: out.confidence || '', // '' for greetings/small-talk → no badge
       confidenceReason: out.confidenceReason || '',
       isOutOfScope: out.isOutOfScope || false,
     });

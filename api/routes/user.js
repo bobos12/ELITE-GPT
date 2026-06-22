@@ -14,7 +14,15 @@ const router = express.Router();
 router.get('/me', requireAuth, (req, res) => {
   const user = findUserById(req.user.id);
   if (!user) return res.status(404).json({ error: 'Not found' });
-  return res.json({ id: user.id, email: user.email });
+  return res.json({
+    id: user.id,
+    email: user.email,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    phone: user.phone,
+    accountType: user.accountType,
+    governorate: user.governorate,
+  });
 });
 
 // GET /api/user/history

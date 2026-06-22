@@ -247,6 +247,102 @@
   .auth-form-panel { padding: 32px 20px; }
 }
 
+/* ─── Signup extras: rows, select, segmented control, password rules ─────────── */
+.auth-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.auth-select {
+  height: 46px;
+  border-radius: var(--radius-md, 10px);
+  border: 1px solid var(--border-2, rgba(237,231,222,0.10));
+  background: var(--ink-800, #141720);
+  color: var(--stone-100, #EDE7DE);
+  padding: 0 12px;
+  font-size: 0.95rem;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 180ms, box-shadow 180ms;
+  width: 100%;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+.auth-select:focus {
+  border-color: var(--jade-500, #1B7A5E);
+  box-shadow: 0 0 0 3px var(--jade-glow, rgba(27,122,94,0.18));
+}
+
+.auth-segment {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.auth-segment-option {
+  height: 46px;
+  border-radius: var(--radius-md, 10px);
+  border: 1px solid var(--border-2, rgba(237,231,222,0.10));
+  background: var(--ink-800, #141720);
+  color: var(--stone-300, #BDB3A4);
+  font-family: var(--font-arabic, sans-serif);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: border-color 150ms, background 150ms, color 150ms;
+}
+.auth-segment-option:hover { border-color: rgba(212,175,55,0.4); }
+.auth-segment-option.active {
+  border-color: #D4AF37;
+  background: rgba(212,175,55,0.12);
+  color: #F5E6A8;
+}
+
+.auth-field-error {
+  color: #fca5a5;
+  font-size: 0.78rem;
+  font-weight: 500;
+  direction: rtl;
+}
+
+.auth-input.invalid,
+.auth-select.invalid { border-color: rgba(248, 113, 113, 0.45); }
+
+.auth-pw-rules {
+  display: grid;
+  gap: 5px;
+  margin-top: 2px;
+  direction: rtl;
+}
+.auth-pw-rule {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.78rem;
+  color: var(--stone-500, #7D7872);
+  transition: color 150ms;
+}
+.auth-pw-rule.met { color: var(--jade-300, #2DB882); }
+.auth-pw-rule-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 1.5px solid currentColor;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  flex: 0 0 auto;
+}
+
+@media (max-width: 520px) {
+  .auth-row { grid-template-columns: 1fr; }
+}
+
 /* ─── Account page styles ────────────────────────────────────────────────────── */
 .account-shell {
   min-height: 100vh;

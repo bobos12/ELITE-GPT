@@ -98,10 +98,11 @@
 }
 
 .ec-sb-wordmark {
-  font-size: 0.88rem;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-  background: linear-gradient(135deg, #F5E6A8 0%, #D4AF37 60%, #B8860B 100%);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  font-family: var(--font-display);
+  background: linear-gradient(135deg, #FBF1C7 0%, #E8C96A 55%, #B8860B 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -424,10 +425,24 @@
   flex-direction: column;
   min-width: 0;
   /* height is set by align-items:stretch from parent .ec-root — no dvh needed here */
-  background: #0B0B0B;
+  background:
+    radial-gradient(120% 80% at 50% -10%, rgba(212, 175, 55, 0.06) 0%, transparent 45%),
+    radial-gradient(80% 50% at 100% 0%, rgba(154, 115, 24, 0.05) 0%, transparent 50%),
+    linear-gradient(180deg, #0C0B0A 0%, #090909 100%);
   position: relative; /* settings panel, profile menu position against this */
   overflow-x: hidden; /* prevent any wide child from causing horizontal scroll */
 }
+
+/* Subtle premium vignette over the main area */
+.ec-main::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none;
+  background: radial-gradient(120% 120% at 50% 50%, transparent 60%, rgba(0, 0, 0, 0.35) 100%);
+  z-index: 0;
+}
+.ec-main > * { position: relative; z-index: 1; }
 
 /* ── Topbar ──────────────────────────────────────────────────────────────── */
 .ec-topbar {
@@ -716,36 +731,42 @@
 }
 
 .ec-welcome-icon {
-  width: 72px;
-  height: 72px;
-  border-radius: 20px;
-  background: linear-gradient(135deg, rgba(212, 175, 55, 0.12) 0%, rgba(184, 134, 11, 0.06) 100%);
-  border: 1px solid rgba(212, 175, 55, 0.2);
+  width: 76px;
+  height: 76px;
+  border-radius: 22px;
+  background: linear-gradient(145deg, rgba(245, 230, 168, 0.16) 0%, rgba(184, 134, 11, 0.06) 100%);
+  border: 1px solid rgba(212, 175, 55, 0.28);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #D4AF37;
-  margin-bottom: 20px;
-  box-shadow: 0 0 40px rgba(212, 175, 55, 0.1), 0 0 0 6px rgba(212, 175, 55, 0.04);
+  color: #F5E6A8;
+  margin-bottom: 22px;
+  box-shadow:
+    0 0 50px rgba(212, 175, 55, 0.16),
+    0 0 0 7px rgba(212, 175, 55, 0.04),
+    0 1px 0 rgba(255, 248, 220, 0.12) inset;
 }
 
 .ec-welcome-title {
-  font-size: 1.7rem;
+  font-size: 1.9rem;
   font-weight: 800;
   margin: 0 0 10px;
-  background: linear-gradient(135deg, #F5E6A8 0%, #D4AF37 55%, #B8860B 100%);
+  background: linear-gradient(135deg, #FBF1C7 0%, #E8C96A 45%, #B8860B 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  line-height: 1.2;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  font-family: var(--font-display);
 }
 
 .ec-welcome-sub {
-  font-size: 0.92rem;
-  color: var(--stone-500);
+  font-size: 0.95rem;
+  color: var(--stone-400);
   margin: 0 0 36px;
   font-family: var(--font-arabic);
-  line-height: 1.6;
+  line-height: 1.7;
+  max-width: 460px;
 }
 
 .ec-welcome-cards {
@@ -761,19 +782,21 @@
   flex-direction: column;
   align-items: flex-end;
   gap: 6px;
-  padding: 16px;
-  background: #141414;
+  padding: 18px;
+  background: linear-gradient(160deg, #15140F 0%, #100F0E 100%);
   border: 1px solid rgba(255, 248, 220, 0.07);
-  border-radius: 14px;
+  border-radius: 16px;
   cursor: pointer;
   text-align: right;
   direction: rtl;
-  transition: border-color 220ms, background 220ms, box-shadow 220ms;
+  transition: border-color 260ms var(--ease-out), background 260ms var(--ease-out),
+    box-shadow 260ms var(--ease-out), transform 260ms var(--ease-out);
 }
 .ec-welcome-card:hover {
-  border-color: rgba(212, 175, 55, 0.25);
-  background: rgba(212, 175, 55, 0.04);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.3), 0 0 0 1px rgba(212, 175, 55, 0.08);
+  border-color: rgba(212, 175, 55, 0.3);
+  background: linear-gradient(160deg, rgba(212, 175, 55, 0.07) 0%, rgba(154, 115, 24, 0.02) 100%);
+  box-shadow: 0 14px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(212, 175, 55, 0.1);
+  transform: translateY(-3px);
 }
 
 .ec-welcome-card-icon {
@@ -841,16 +864,17 @@
 
 .ec-msg-user-bubble {
   max-width: 75%;
-  padding: 12px 16px;
-  background: #1C1C1C;
-  border: 1px solid rgba(255, 248, 220, 0.09);
+  padding: 13px 17px;
+  background: linear-gradient(160deg, #232017 0%, #1A1814 100%);
+  border: 1px solid rgba(212, 175, 55, 0.16);
   border-radius: 16px 16px 4px 16px;
   font-size: 0.94rem;
-  line-height: 1.7;
+  line-height: 1.75;
   color: var(--stone-100);
   font-family: var(--font-arabic);
   word-break: break-word;
   overflow-wrap: break-word;
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.3);
 }
 
 /* ── AI message ──────────────────────────────────────────────────────────── */
@@ -858,20 +882,33 @@
   display: flex;
   flex-direction: column;
   gap: 0;
-  padding: 18px 20px;
-  background: #111111;
-  border: 1px solid rgba(212, 175, 55, 0.08);
-  border-radius: 16px;
+  padding: 20px 22px;
+  background:
+    linear-gradient(180deg, rgba(212, 175, 55, 0.025) 0%, transparent 18%),
+    linear-gradient(160deg, #151311 0%, #100F0E 100%);
+  border: 1px solid rgba(212, 175, 55, 0.1);
+  border-radius: 18px;
   position: relative;
+  box-shadow:
+    0 1px 0 rgba(255, 248, 220, 0.03) inset,
+    0 10px 40px rgba(0, 0, 0, 0.35);
+  transition: border-color 240ms var(--ease-out), box-shadow 240ms var(--ease-out);
+}
+.ec-msg-ai:hover {
+  border-color: rgba(212, 175, 55, 0.18);
+  box-shadow:
+    0 1px 0 rgba(255, 248, 220, 0.04) inset,
+    0 14px 50px rgba(0, 0, 0, 0.42);
 }
 .ec-msg-ai::before {
   content: '';
   position: absolute;
-  top: 0; right: 0;
+  top: 14px; right: 0;
   width: 3px;
-  height: 100%;
-  background: linear-gradient(180deg, #D4AF37 0%, #9A7318 100%);
-  border-radius: 0 16px 16px 0;
+  height: calc(100% - 28px);
+  background: linear-gradient(180deg, #F5E6A8 0%, #D4AF37 45%, #9A7318 100%);
+  border-radius: 99px;
+  box-shadow: 0 0 14px rgba(212, 175, 55, 0.45);
 }
 
 /* AI message header */
@@ -904,11 +941,11 @@
 }
 
 .ec-msg-ai-name {
-  font-size: 0.78rem;
+  font-size: 0.8rem;
   font-weight: 700;
-  color: #D4AF37;
-  letter-spacing: 0.03em;
-  font-family: 'IBM Plex Sans Arabic', monospace;
+  color: #E8C96A;
+  letter-spacing: 0.08em;
+  font-family: var(--font-display);
 }
 
 .ec-msg-ai-model {
@@ -1312,19 +1349,19 @@
 
 /* Input card */
 .ec-input-card {
-  background: rgba(20, 20, 20, 0.9);
+  background: linear-gradient(180deg, rgba(28, 26, 22, 0.92) 0%, rgba(18, 17, 15, 0.92) 100%);
   -webkit-backdrop-filter: blur(24px);
   backdrop-filter: blur(24px);
-  border: 1px solid rgba(212, 175, 55, 0.1);
-  border-radius: 16px;
-  transition: border-color 200ms, box-shadow 200ms;
+  border: 1px solid rgba(212, 175, 55, 0.14);
+  border-radius: 18px;
+  transition: border-color 220ms var(--ease-out), box-shadow 220ms var(--ease-out);
   max-width: 800px;
   margin: 0 auto;
-  box-shadow: 0 2px 24px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,248,220,0.03);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,248,220,0.03);
 }
 .ec-input-card:focus-within {
-  border-color: rgba(212, 175, 55, 0.24);
-  box-shadow: 0 4px 32px rgba(0,0,0,0.45), 0 0 0 3px rgba(212, 175, 55, 0.05);
+  border-color: rgba(212, 175, 55, 0.32);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.5), 0 0 0 3px rgba(212, 175, 55, 0.08);
 }
 
 .ec-textarea {

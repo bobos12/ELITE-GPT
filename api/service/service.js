@@ -6,44 +6,84 @@ const { retrieveRelevant } = require('./retrieval');
 const OUT_OF_SCOPE_REPLY =
   'أنا مساعد قانوني متخصص في القانون المصري فقط، ولا أستطيع الإجابة على أسئلة خارج النطاق القانوني. يُرجى طرح سؤالك المتعلق بالقانون المصري وسأكون سعيداً بمساعدتك.';
 
-const GREETINGS = new Set([
-  'مرحبا', 'اهلا', 'أهلا', 'hello', 'hi', 'hey', 'سلام', 'السلام عليكم',
-  'وعليكم السلام', 'صباح الخير', 'مساء الخير', 'مساء النور', 'صباح النور',
-  'تحياتي', 'how are you', 'how are you?', 'good morning', 'good evening',
-]);
-
-function isGreeting(text) {
-  const raw = String(text || '').trim();
-  if (!raw) return false;
-  const normalized = raw.replace(/[؟?!!.,،]/g, '').trim().toLowerCase();
-  const words = normalized.split(/\s+/).filter(Boolean);
-  if (!words.length) return false;
-
-  // Direct set match after stripping punctuation only
-  const stripped = words.join('');
-  if (GREETINGS.has(stripped) || GREETINGS.has(normalized)) return true;
-
-  if (words.length <= 3) {
-    const joined = words.join(' ');
-    if (/^(مرحبا|اهلا|أهلا|hello|hi|hey|سلام|تحية)/i.test(joined)) return true;
-    if (/^السلام/i.test(joined)) return true;
-    if (/^(صباح|مساء) (الخير|النور)/i.test(joined)) return true;
-    if (/^(كيف|how) (حالك|are|حال)/i.test(joined)) return true;
-    if (/^(good )?(morning|evening|afternoon)/i.test(joined)) return true;
-  }
-  return false;
+// Normalize Arabic so detection is robust to spelling/diacritic variants.
+function normalizeArabic(text) {
+  return String(text || '')
+    .replace(/[ً-ٰٟ]/g, '') // diacritics (tashkeel)
+    .replace(/ـ/g, '')                 // tatweel
+    .replace(/[إأآ]/g, 'ا')
+    .replace(/ى/g, 'ي')
+    .replace(/ة/g, 'ه')
+    .replace(/ؤ/g, 'و')
+    .replace(/ئ/g, 'ي');
 }
 
-const SIMPLE_REPLIES = [
-  'مرحباً بك! أنا المستشار القانوني ELITE. كيف يمكنني مساعدتك في استشارة قانونية اليوم؟',
-  'أهلاً وسهلاً! أنا هنا للإجابة على استفساراتك القانونية. ماذا تريد أن تعرف عن القانون المصري؟',
-  'مرحباً! أنا مساعدك القانوني الذكي. هل لديك سؤال قانوني محدد تود الاستفسار عنه؟',
-  'أهلاً بك في ELITE للمحاماة. يسعدني تقديم المساعدة القانونية. ما هو استفسارك؟',
-  'مرحباً! مستشارك القانوني في خدمتك. هل تبحث عن معلومات حول قانون معين أو لديك قضية ترغب في الاستشارة بشأنها؟',
+// A legal signal inside a short message means "treat as a real question",
+// even if it opens with a greeting (e.g. "أهلاً، عندي مشكلة في عقد الإيجار").
+const LEGAL_SIGNAL = /(قانون|مادة|ماده|محكمه|محكمة|دعوى|دعوي|عقد|إيجار|ايجار|طلاق|زواج|ميراث|عقوبه|عقوبة|جريمه|جريمة|شركه|شركة|حق|حقوق|التزام|ضريبه|ضريبة|عقار|ملكيه|ملكية|عمل|موظف|أجر|اجر|تعويض|جنحه|جناية|نفقه|نفقة|حضانه|حضانة|استشاره|استشارة|مستند|اجراء|إجراء)/;
+
+function classifySmallTalk(text) {
+  const raw = String(text || '').trim();
+  if (!raw) return null;
+
+  const norm = normalizeArabic(raw).replace(/[؟?!.,،:؛]/g, ' ').replace(/\s+/g, ' ').trim().toLowerCase();
+  const words = norm.split(/\s+/).filter(Boolean);
+  if (!words.length) return null;
+
+  // If the message carries a real legal signal, it is NOT small talk.
+  if (LEGAL_SIGNAL.test(norm)) return null;
+
+  // Identity / capability questions ("من أنت", "ماذا تفعل", "كيف تعمل", "what can you do").
+  if (
+    /(من انت|مين انت|من حضرتك|عرف نفسك|عرفني بنفسك|ما هو elite|ما هي elite|ماذا تفعل|ماذا تستطيع|ايه اللي تقدر|وظيفتك ايه|بتعمل ايه|كيف تعمل|ما هي مهامك|قدراتك)/.test(norm) ||
+    /\b(who are you|what (are|can) you|what do you do|how do you work|your name)\b/.test(norm)
+  ) {
+    return 'identity';
+  }
+
+  // Thanks / closings.
+  if (
+    words.length <= 5 &&
+    (/(شكرا|شكرًا|متشكر|تسلم|جزاك الله|الله يكرمك|ربنا يكرمك|مع السلامه|باي|الى اللقاء|تمام كده|ممتاز كده)/.test(norm) ||
+     /\b(thanks|thank you|thx|bye|goodbye|ok thanks)\b/.test(norm))
+  ) {
+    return 'thanks';
+  }
+
+  // Greetings (only for short messages so a greeting + question stays a question).
+  if (words.length <= 5) {
+    if (/(^|\s)(مرحبا|اهلا|هلا|هاي|سلام|تحياتي|ازيك|ازايك|كيف حالك|كيفك)(\s|$)/.test(norm)) return 'greeting';
+    if (/(^|\s)السلام عليكم/.test(norm) || /(^|\s)وعليكم السلام/.test(norm)) return 'greeting';
+    if (/(صباح|مساء) (الخير|النور)/.test(norm)) return 'greeting';
+    if (/\b(hi|hello|hey|good (morning|evening|afternoon)|how are you)\b/.test(norm)) return 'greeting';
+  }
+
+  return null;
+}
+
+const GREETING_REPLIES = [
+  'مرحباً بك في ELITE للاستشارات القانونية. أنا مستشارك القانوني المتخصص في القانون المصري — تفضّل بعرض استشارتك وسأقدّم لك التحليل القانوني المناسب.',
+  'أهلاً وسهلاً بك. يسعدني أن أكون مستشارك القانوني في مسائل القانون المصري. كيف يمكنني خدمتك اليوم؟',
+  'أهلاً بك. أنا المستشار القانوني الذكي ELITE. تفضّل بطرح سؤالك أو عرض المسألة القانونية التي تشغلك.',
+  'مرحباً. مستشارك القانوني في القانون المصري في خدمتك — هل لديك قضية أو استفسار قانوني محدد ترغب في مناقشته؟',
 ];
 
-function getRandomGreetingReply() {
-  return SIMPLE_REPLIES[Math.floor(Math.random() * SIMPLE_REPLIES.length)];
+const IDENTITY_REPLY =
+  'أنا ELITE، مستشارك القانوني الذكي المتخصص حصراً في القانون المصري. يمكنني مساعدتك في: تحليل المسائل القانونية وتوضيح المواد والنصوص ذات الصلة، وشرح الإجراءات القضائية والمستندات المطلوبة، والإجابة عن استفساراتك في مختلف فروع القانون المصري — المدني والجنائي والتجاري والأحوال الشخصية والعمل والعقارات والضرائب وغيرها. تفضّل بعرض استشارتك القانونية وسأقدّم لك تحليلاً متكاملاً.';
+
+const THANKS_REPLIES = [
+  'على الرحب والسعة. إن كان لديك أي استفسار قانوني آخر، فأنا في خدمتك.',
+  'يسعدني أنني استطعت المساعدة. لا تتردد في طرح أي سؤال قانوني آخر.',
+];
+
+function pick(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function getSmallTalkReply(kind) {
+  if (kind === 'identity') return IDENTITY_REPLY;
+  if (kind === 'thanks') return pick(THANKS_REPLIES);
+  return pick(GREETING_REPLIES);
 }
 
 // Detects ANY single CJK or other non-Arabic foreign-script character
@@ -155,9 +195,11 @@ async function getGroqReply(userMessage) {
     return { reply: 'مفتاح GROQ_API_KEY غير موجود.', citations: [], confidence: 'low', confidenceReason: '', isOutOfScope: false };
   }
 
-  // Simple greeting/normal conversation — no citations or confidence needed
-  if (isGreeting(userMessage)) {
-    return { reply: getRandomGreetingReply(), citations: [], confidence: '', confidenceReason: '', isOutOfScope: false };
+  // Greetings / identity / thanks — answered warmly and professionally,
+  // with NO confidence badge and NO citations.
+  const smallTalk = classifySmallTalk(userMessage);
+  if (smallTalk) {
+    return { reply: getSmallTalkReply(smallTalk), citations: [], confidence: '', confidenceReason: '', isOutOfScope: false };
   }
 
   const model = process.env.GROQ_MODEL || 'llama-3.3-70b-versatile';

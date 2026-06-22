@@ -65,6 +65,18 @@ function loadLaws() {
   return _cache;
 }
 
+// Normalize Arabic so query terms match article text despite spelling variants.
+function normalizeArabic(text) {
+  return String(text || '')
+    .replace(/[ً-ٰٟ]/g, '') // diacritics (tashkeel)
+    .replace(/ـ/g, '')                 // tatweel
+    .replace(/[إأآ]/g, 'ا')
+    .replace(/ى/g, 'ي')
+    .replace(/ة/g, 'ه')
+    .replace(/ؤ/g, 'و')
+    .replace(/ئ/g, 'ي');
+}
+
 const STOP_WORDS = new Set([
   'من', 'إلى', 'في', 'على', 'عن', 'مع', 'هو', 'هي', 'هم', 'هن', 'أن', 'إن',
   'كان', 'كانت', 'يكون', 'هذا', 'هذه', 'ذلك', 'تلك', 'التي', 'الذي', 'الذين',
@@ -74,7 +86,7 @@ const STOP_WORDS = new Set([
 ]);
 
 function tokenize(text) {
-  return String(text || '')
+  return normalizeArabic(text)
     .replace(/[،؛:؟!«»""()\[\]\.،]/g, ' ')
     .split(/\s+/)
     .map(t => t.trim().replace(/^ال/, ''))
@@ -83,11 +95,11 @@ function tokenize(text) {
 
 function scoreArticle(article, queryTokens) {
   let score = 0;
-  const keywordsText = (article.keywords || []).join(' ');
-  const lawNameText = String(article.law_name || '');
-  const categoryText = String(article.category || '');
-  const chapterText = String(article.chapter || '');
-  const articleText = String(article.article_text || '');
+  const keywordsText = normalizeArabic((article.keywords || []).join(' ')).toLowerCase();
+  const lawNameText = normalizeArabic(article.law_name || '').toLowerCase();
+  const categoryText = normalizeArabic(article.category || '').toLowerCase();
+  const chapterText = normalizeArabic(article.chapter || '').toLowerCase();
+  const articleText = normalizeArabic(article.article_text || '').toLowerCase();
 
   for (const token of queryTokens) {
     const tl = token.toLowerCase();
@@ -100,7 +112,7 @@ function scoreArticle(article, queryTokens) {
   return score;
 }
 
-function retrieveRelevant(query, topK = 3) {
+function retrieveRelevant(query, topK = 4) {
   const laws = loadLaws();
   if (!laws.length) return [];
   const queryTokens = tokenize(query);

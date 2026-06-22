@@ -1,5 +1,5 @@
 /* ─── ELITE Legal AI — Premium Gold Design System ──────────────────────────── */
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Tajawal:wght@300;400;500;700;800&display=swap');
 
 *, *::before, *::after { box-sizing: border-box; }
 
@@ -52,9 +52,9 @@
   --border-gold-bright: rgba(212, 175, 55, 0.35);
 
   /* ── Typography ──────────────────────────────── */
-  --font-sans: 'IBM Plex Sans Arabic', 'Inter', system-ui, sans-serif;
-  --font-arabic: 'IBM Plex Sans Arabic', system-ui, sans-serif;
-  --font-display: 'IBM Plex Sans Arabic', 'Inter', system-ui, sans-serif;
+  --font-sans: 'Tajawal', 'Sora', system-ui, sans-serif;
+  --font-arabic: 'Tajawal', system-ui, sans-serif;
+  --font-display: 'Sora', 'Tajawal', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
 
   /* ── Spacing ─────────────────────────────────── */

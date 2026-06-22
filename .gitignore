@@ -36,6 +36,12 @@ client/react.err
 # uploaded user files
 api/storage/documents/
 
+# sqlite database (runtime data — created automatically on first run)
+api/storage/*.db
+api/storage/*.db-wal
+api/storage/*.db-shm
+api/storage/users.json.migrated
+
 # misc
 .DS_Store
 query

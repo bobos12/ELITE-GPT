@@ -44,7 +44,15 @@ export function AuthProvider({ children }) {
       return;
     }
     const data = await res.json();
-    setUser({ id: data.id, email: data.email });
+    setUser({
+      id: data.id,
+      email: data.email,
+      firstName: data.firstName,
+      lastName: data.lastName,
+      phone: data.phone,
+      accountType: data.accountType,
+      governorate: data.governorate,
+    });
   }, [authFetch, logout, token]);
 
   useEffect(() => {
