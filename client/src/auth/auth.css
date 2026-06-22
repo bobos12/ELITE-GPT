@@ -109,6 +109,8 @@
 .auth-card {
   width: 100%;
   max-width: 420px;
+  direction: rtl;
+  text-align: right;
 }
 
 .auth-title {
@@ -160,7 +162,15 @@
   box-sizing: border-box;
 }
 
+.auth-input { text-align: right; }
 .auth-input::placeholder { color: var(--stone-600, #5E5A56); }
+
+/* Email / phone stay LTR but align to the right edge under their label */
+.auth-input--ltr {
+  direction: ltr;
+  text-align: right;
+}
+.auth-input--ltr::placeholder { text-align: right; }
 
 .auth-input:focus {
   border-color: var(--jade-500, #1B7A5E);

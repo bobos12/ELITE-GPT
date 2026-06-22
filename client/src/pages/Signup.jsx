@@ -136,7 +136,7 @@ export default function Signup() {
             <label className="auth-label">
               البريد الإلكتروني
               <input
-                className={'auth-input' + invalidCls('email')}
+                className={'auth-input auth-input--ltr' + invalidCls('email')}
                 value={form.email}
                 onChange={set('email')}
                 type="email"
@@ -149,13 +149,12 @@ export default function Signup() {
             <label className="auth-label">
               رقم الهاتف
               <input
-                className={'auth-input' + invalidCls('phone')}
+                className={'auth-input auth-input--ltr' + invalidCls('phone')}
                 value={form.phone}
                 onChange={set('phone')}
                 type="tel"
                 autoComplete="tel"
                 placeholder="01012345678"
-                dir="ltr"
                 required
               />
             </label>

@@ -56,7 +56,7 @@ export default function Login() {
             <label className="auth-label">
               البريد الإلكتروني
               <input
-                className="auth-input"
+                className="auth-input auth-input--ltr"
                 value={email}
                 onChange={e => setEmail(e.target.value)}
                 type="email"
