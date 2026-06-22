@@ -218,15 +218,17 @@ Treat this as a checklist to make the app feel like a shipped product during the
 
 These genuinely change the implementation and should be answered by the product owner:
 
-1. **Persistence — RESOLVED.** Implemented **SQLite via `better-sqlite3`** (`api/db/database.js`,
-   `api/store.js`). Chosen because it needs **zero external setup** (no account, no connection
-   string): the `elite.db` file is created automatically and the old `users.json` is migrated on
-   first run. Durable for local/long-lived hosting.
-   - ⚠️ **Vercel caveat still applies:** on Vercel serverless the function filesystem is
-     ephemeral, so the SQLite file lives in `/tmp` and does **not** persist across cold starts /
-     instances. For a durable cloud demo, set `DB_PATH` to a mounted volume **or** migrate to a
-     networked DB (Neon Postgres / Turso libSQL) later — the `store.js` API is the only seam that
-     would change. For a **local** demo this is fully durable today.
+1. **Persistence — RESOLVED (file store + seed account).** SQLite (`better-sqlite3`) was tried but
+   its native module is unreliable on Vercel serverless (caused 500s), so `api/store.js` was
+   reverted to the **file-based JSON store** (in-memory Maps + `users.json`), which has no native
+   deps and is safe on Vercel. Login in production is guaranteed by the **env-seeded account**
+   (`SEED_EMAIL` + `SEED_PASSWORD_HASH`) which is re-created on every cold start.
+   - ⚠️ **Known limitation:** on Vercel the filesystem is ephemeral, so user *sign-ups* don't
+     persist across cold starts — only the seeded account is durable. For real multi-user
+     persistence, move `store.js` to a networked DB (MongoDB Atlas — cluster already referenced in
+     `.env.example`; or Neon Postgres). The `store.js` function signatures are the only seam.
+   - **Required Vercel env vars:** `JWT_SECRET`, `SEED_EMAIL`, `SEED_PASSWORD_HASH`,
+     `CHAT_PROVIDER=groq`, `GROQ_API_KEY`, `GROQ_MODEL`.
 2. **Login fields.** Email + password only (keep), confirmed?
 3. **`accountType = lawyer`** — does it unlock anything different (e.g. advanced templates), or
    is it just profile metadata for now?
